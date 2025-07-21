@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -18,3 +17,42 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+###> doctrine/doctrine-bundle ###
+/var/data.db
+/var/cache/
+###< doctrine/doctrine-bundle ###
+
+# Base de données SQLite
+*.db
+*.sqlite
+*.sqlite3
+/var/db/
+/data/
+
+# Fichiers de logs
+*.log
+
+# Fichiers temporaires
+*.tmp
+*.swp
+*.swo
+*~
+
+# Fichiers IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+/.env.local.docker
