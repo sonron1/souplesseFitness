@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription - Souplesse Fitness{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0 text-center">
+                            <i class="fas fa-user-plus me-2"></i>Inscription
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+                        {{ form_start(registrationForm) }}
+
+                        {# 🎭 Type d'utilisateur #}
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-user-tag me-2"></i>Profil
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ form_row(registrationForm.typeUtilisateur) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {# 🔐 Informations de connexion #}
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-key me-2"></i>Connexion
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.email) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.plainPassword) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {# 👤 Informations personnelles #}
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-user me-2"></i>Informations personnelles
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.nom) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.prenom) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.telephone) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.dateNaissance) }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ form_row(registrationForm.adresse) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.profession) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.contactUrgence) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {# ✅ Conditions #}
+                        <div class="mb-4">
+                            {{ form_row(registrationForm.agreeTerms) }}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus me-2"></i>S'inscrire
+                            </button>
+                        </div>
+
+                        {{ form_end(registrationForm) }}
+
+                        <div class="text-center mt-3">
+                            <p>Déjà inscrit ? <a href="{{ path('app_login') }}" class="text-primary">Se connecter</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
