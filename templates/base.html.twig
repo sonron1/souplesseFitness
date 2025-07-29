@@ -1,17 +1,196 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+        <title>{% block title %}Souplesse Fitness - Salle de sport moderne{% endblock %}</title>
+        <link rel="icon" href="{{ asset('images/favicon.ico') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="{% block meta_description %}Souplesse Fitness - Votre salle de sport moderne à Paris. Musculation, cardio, cours collectifs, coaching personnalisé. Rejoignez-nous !{% endblock %}">
+        <meta name="keywords" content="{% block meta_keywords %}salle de sport, fitness, musculation, cardio, coaching, Paris, abonnement gym{% endblock %}">
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {# Open Graph pour les réseaux sociaux #}
+        <meta property="og:title" content="{% block og_title %}{{ block('title') }}{% endblock %}">
+        <meta property="og:description" content="{% block og_description %}{{ block('meta_description') }}{% endblock %}">
+        <meta property="og:image" content="{% block og_image %}{{ absolute_url(asset('images/logo.jpg')) }}{% endblock %}">
+        <meta property="og:url" content="{% block og_url %}{{ app.request.uri }}{% endblock %}">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="Souplesse Fitness">
+
+        {# WebpackEncoreBundle - CSS assets #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
         {% endblock %}
+        {# CSS additionnels spécifiques à chaque page #}
+        {% block extra_stylesheets %}{% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="{% block body_class %}{% endblock %}">
+    {# Messages flash globaux #}
+    {% block flash_messages %}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show m-0" role="alert" style="border-radius: 0;">
+                    {% if label == 'success' %}
+                        <i class="bi bi-check-circle me-2"></i>
+                    {% elseif label == 'error' or label == 'danger' %}
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                    {% elseif label == 'warning' %}
+                        <i class="bi bi-exclamation-circle me-2"></i>
+                    {% elseif label == 'info' %}
+                        <i class="bi bi-info-circle me-2"></i>
+                    {% endif %}
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    {% endblock %}
+
+    {# Navigation principale - peut être surchargée #}
+    {% block navigation %}
+        {% if block('show_navigation') is not defined or block('show_navigation') %}
+            <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm py-2 sticky-top" style="letter-spacing:.02em;">
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center gap-2" href="{{ path('app_home') }}">
+                        <img src="{{ asset('images/logo.jpg') }}" alt="Souplesse Fitness" class="rounded-circle border" style="height:48px;width:48px;object-fit:cover;">
+                        <strong class="text-figma-dark" style="font-size:1.3rem; font-weight:700;">Souplesse Fitness</strong>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Ouvrir le menu">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="mainNav">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-2">
+                            <li class="nav-item"><a class="nav-link text-figma-dark fw-medium px-3" href="{{ path('app_home') }}#abonnements">Abonnements</a></li>
+                            <li class="nav-item"><a class="nav-link text-figma-dark fw-medium px-3" href="{{ path('app_home') }}#boutique">Boutique</a></li>
+                            <li class="nav-item"><a class="nav-link text-figma-dark fw-medium px-3" href="{{ path('app_home') }}#temoignages">Témoignages</a></li>
+                            <li class="nav-item"><a class="nav-link text-figma-dark fw-medium px-3" href="{{ path('app_home') }}#contact">Contact</a></li>
+                        </ul>
+                        <div class="ms-lg-3 mt-2 mt-lg-0 d-flex gap-2">
+                            {% if app.user %}
+                                {# Utilisateur connecté #}
+                                <div class="dropdown">
+                                    <button class="btn btn-figma-yellow rounded-pill px-4 py-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-person-circle me-1"></i>
+                                        {{ app.user.email|split('@')[0] }}
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Mon profil</a></li>
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-calendar me-2"></i>Mes réservations</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right me-2"></i>Déconnexion</a></li>
+                                    </ul>
+                                </div>
+                            {% else %}
+                                {# Utilisateur non connecté #}
+                                <a href="{{ path('app_login') }}" class="btn btn-figma-outline-dark rounded-pill px-4 py-2">Connexion</a>
+                                <a href="{{ path('app_register') }}" class="btn btn-figma-yellow rounded-pill px-4 py-2">Inscription</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        {% endif %}
+    {% endblock %}
+
+    {# Contenu principal de chaque page #}
+    {% block body %}{% endblock %}
+
+    {# Footer - peut être surchargé #}
+    {% block footer %}
+        {% if block('show_footer') is not defined or block('show_footer') %}
+            <footer class="border-top py-4 bg-light mt-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <img src="{{ asset('images/logo.jpg') }}" alt="Souplesse Fitness" class="rounded-circle border" style="height:32px;width:32px;object-fit:cover;">
+                                <strong class="text-figma-dark">Souplesse Fitness</strong>
+                            </div>
+                            <p class="text-figma-dark small mb-2">
+                                <i class="bi bi-geo-alt-fill me-1"></i> 123 rue Fitness, 75000 Paris
+                            </p>
+                            <p class="text-figma-dark small mb-2">
+                                <i class="bi bi-telephone me-1"></i> 01 23 45 67 89
+                            </p>
+                            <p class="text-figma-dark small">
+                                <i class="bi bi-envelope me-1"></i> contact@souplesse-fitness.fr
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-figma-dark fw-bold mb-3">Liens rapides</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <ul class="list-unstyled small">
+                                        <li><a href="{{ path('app_home') }}#abonnements" class="text-figma-dark text-decoration-none">Abonnements</a></li>
+                                        <li><a href="{{ path('app_home') }}#boutique" class="text-figma-dark text-decoration-none">Boutique</a></li>
+                                        <li><a href="{{ path('app_home') }}#contact" class="text-figma-dark text-decoration-none">Contact</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-6">
+                                    <ul class="list-unstyled small">
+                                        <li><a href="#" class="text-figma-dark text-decoration-none">Mentions légales</a></li>
+                                        <li><a href="#" class="text-figma-dark text-decoration-none">CGV</a></li>
+                                        <li><a href="#" class="text-figma-dark text-decoration-none">Politique de confidentialité</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <p class="text-figma-dark small mb-0">
+                                &copy; {{ "now"|date("Y") }} Souplesse Fitness. Tous droits réservés.
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <div class="mb-3">
+                                <a href="#contact" class="btn btn-figma-yellow btn-sm rounded-pill shadow-sm fw-bold px-4" style="letter-spacing:0.5px;">
+                                    <i class="bi bi-arrow-right-circle me-1"></i> Séance d'essai gratuite
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        {% endif %}
+    {% endblock %}
+
+    {# WebpackEncoreBundle - JS assets #}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+
+    {# JavaScript additionnel spécifique à chaque page #}
+    {% block extra_javascripts %}{% endblock %}
+
+    <!-- Bouton de retour en haut -->
+    <button id="backToTop" class="btn btn-figma-yellow rounded-circle position-fixed shadow" style="bottom: 20px; right: 20px; z-index: 1000; display: none; width: 50px; height: 50px;">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <script>
+        // Script pour le bouton "Retour en haut"
+        document.addEventListener('DOMContentLoaded', function() {
+            const backToTopButton = document.getElementById('backToTop');
+
+            // Afficher/masquer le bouton selon le scroll
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTopButton.style.display = 'block';
+                } else {
+                    backToTopButton.style.display = 'none';
+                }
+            });
+
+            // Action de retour en haut
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
     </body>
 </html>

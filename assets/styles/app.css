@@ -1,2 +1,88 @@
-body {
+@import url('acceuil.css');
+
+@import url('contact.css');
+
+@import url('register.css');
+
+@import url('admin.css');
+/* Import de la police DM Sans pour TOUT LE SITE */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+/* Variables CSS globales */
+:root {
+    --figma-yellow: #FFD700;
+    --figma-dark: #2C3E50;
+    --figma-light: #F8F9FA;
+    --figma-border: rgba(0,0,0,0.1);
+    --figma-shadow: rgba(0,0,0,0.08);
+}
+
+/* Application globale de DM Sans */
+body, html, * {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* Classes utilitaires globales */
+.text-figma-dark { color: var(--figma-dark) !important; }
+.text-figma-yellow { color: var(--figma-yellow) !important; }
+.bg-figma-yellow { background-color: var(--figma-yellow) !important; }
+.bg-figma-dark { background-color: var(--figma-dark) !important; }
+.bg-figma-light { background-color: var(--figma-light) !important; }
+
+/* Boutons globaux - TAILLES RÉDUITES */
+.btn-figma-yellow {
+    background-color: var(--figma-yellow);
+    border-color: var(--figma-yellow);
+    color: var(--figma-dark);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.btn-figma-yellow:hover {
+    background-color: #E6C200;
+    border-color: #E6C200;
+    color: var(--figma-dark);
+    transform: translateY(-1px);
+}
+
+.btn-figma-dark {
+    background-color: var(--figma-dark);
+    border-color: var(--figma-dark);
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 20px;
+    border-radius: 25px;
+}
+
+.btn-figma-outline-dark {
+    background-color: transparent;
+    border: 1.5px solid var(--figma-dark);
+    color: var(--figma-dark);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 20px;
+    border-radius: 25px;
+}
+
+/* Formulaires globaux - TAILLES RÉDUITES */
+.form-control, .form-select {
+    font-size: 14px;
+    padding: 10px 15px;
+    border: 1.5px solid var(--figma-border);
+    border-radius: 10px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--figma-yellow);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--figma-dark);
 }

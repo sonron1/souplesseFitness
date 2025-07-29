@@ -1,0 +1,211 @@
+/* Styles spécifiques à la page d'inscription */
+
+/* Formulaire flottant personnalisé */
+.form-floating-custom {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.form-floating-custom input,
+.form-floating-custom select,
+.form-floating-custom textarea {
+    width: 100%;
+    padding: 12px 15px 8px 15px;
+    font-size: 14px;
+    border: 1.5px solid var(--figma-border);
+    border-radius: 10px;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.form-floating-custom label {
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6c757d;
+    transform-origin: 0 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    background-color: #fff;
+    padding: 0 4px;
+}
+
+/* États du label flottant */
+.form-floating-custom input:focus + label,
+.form-floating-custom input:not(:placeholder-shown) + label,
+.form-floating-custom select:focus + label,
+.form-floating-custom select:not([value=""]) + label,
+.form-floating-custom textarea:focus + label,
+.form-floating-custom textarea:not(:placeholder-shown) + label {
+    top: -8px;
+    left: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--figma-yellow);
+    transform: scale(0.9);
+}
+
+.form-floating-custom input:focus,
+.form-floating-custom select:focus,
+.form-floating-custom textarea:focus {
+    border-color: var(--figma-yellow);
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+    outline: none;
+}
+
+/* Select personnalisé pour inscription */
+.custom-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23FFD700' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    cursor: pointer;
+}
+
+/* Indicateurs d'étapes */
+.step-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 30px 0 40px 0;
+    padding: 0 20px;
+}
+
+.step-line {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    background-color: #e9ecef;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.step-line-progress {
+    height: 100%;
+    background-color: var(--figma-yellow);
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.step {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+    margin: 0 10px;
+}
+
+.step.active {
+    background-color: var(--figma-yellow);
+    color: var(--figma-dark);
+}
+
+.step.completed {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Contenu des étapes */
+.step-content {
+    display: none;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.step-content.active {
+    display: block;
+}
+
+.step-content h3 {
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 25px;
+}
+
+/* Boutons de navigation - TAILLES RÉDUITES */
+.btn-next, .btn-prev {
+    font-size: 13px;
+    padding: 10px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+    margin: 15px 0;
+}
+
+.btn-next {
+    background-color: var(--figma-yellow);
+    color: var(--figma-dark);
+}
+
+.btn-next:hover {
+    background-color: #E6C200;
+    transform: translateY(-1px);
+}
+
+.btn-prev {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-prev:hover {
+    background-color: #545b62;
+    transform: translateY(-1px);
+}
+
+/* Messages d'aide */
+.form-hint {
+    font-size: 11px;
+    color: #6c757d;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+.medical-info {
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--figma-yellow);
+    margin-top: 8px;
+}
+
+.medical-info p {
+    margin: 8px 0;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+/* Checkboxes */
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--figma-border);
+    border-radius: 4px;
+}
+
+.form-check-input:checked {
+    background-color: var(--figma-yellow);
+    border-color: var(--figma-yellow);
+}
+
+.form-check-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--figma-dark);
+}

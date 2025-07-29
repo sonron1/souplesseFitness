@@ -1,0 +1,64 @@
+html, body {
+    font-family: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+}
+.text-figma-dark { color: #161616 !important; }
+.text-figma-yellow { color: #FFE457 !important; }  /* Jaune solaire Figma */
+.bg-figma-yellow { background-color: #FFE457 !important; }
+.bg-figma-dark { background-color: #161616 !important; }
+.btn-figma-yellow {
+    background: #FFE457;
+    color: #161616;
+    border: none;
+    font-weight: bold;
+    box-shadow: 0 2px 12px rgba(255, 227, 87, 0.05);
+    transition: background 0.2s, color 0.2s;
+}
+.btn-figma-yellow:hover, .btn-figma-yellow:focus {
+    background: #FFD600;
+    color: #1a1a1a;
+}
+.btn-figma-outline-dark {
+    border: 2px solid #161616;
+    color: #161616;
+    background: transparent;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-figma-outline-dark:hover,
+.btn-figma-outline-dark:focus {
+    background: #161616;
+    color: #FFE457;
+}
+.text-shadow { text-shadow: 0 2px 8px rgba(0,0,0,.18); }
+.section-space { padding-top: 5rem; padding-bottom: 5rem; }
+.card {
+    border-radius: 1.5rem !important;
+}
+.form-control {
+    border-radius: 1rem;
+}
+
+
+@keyframes abonnementFadeUpScale {
+    0% {
+        opacity: 0;
+        transform: translateY(60px) scale(0.96);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+.abonnement-card {
+    opacity: 0;
+    animation: abonnementFadeUpScale 1s cubic-bezier(.51,1.14,.39,.96) forwards;
+    will-change: opacity, transform;
+}
+.abonnement-card[data-animate] {
+    /* Cela permet de combiner avec animate-on-scroll au besoin */
+}
+
+.abonnement-card[style*="animation-delay"] {
+    /* important si vous souhaitez jouer sur les délais en cascade */
+    animation-fill-mode: both;
+}

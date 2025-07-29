@@ -1,0 +1,184 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+{% block page_title %}Utilisateurs{% endblock %}
+{% block page_subtitle %}Gestion complète des comptes utilisateurs{% endblock %}
+
+{% block body %}
+    <!-- Barre d'outils -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <form method="GET" class="d-flex">
+                        <input type="text" name="search" class="form-control me-2" placeholder="Rechercher par nom ou email..." value="{{ search }}">
+                        <select name="role" class="form-select me-2" style="width: auto;">
+                            <option value="">Tous les rôles</option>
+                            <option value="ROLE_CLIENT" {{ role == 'ROLE_CLIENT' ? 'selected' : '' }}>Clients</option>
+                            <option value="ROLE_COACH" {{ role == 'ROLE_COACH' ? 'selected' : '' }}>Coachs</option>
+                            <option value="ROLE_ADMIN" {{ role == 'ROLE_ADMIN' ? 'selected' : '' }}>Admins</option>
+                        </select>
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="{{ path('admin_user_create') }}" class="btn btn-primary">
+                        <i class="bi bi-person-plus"></i> Nouvel utilisateur
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableau des utilisateurs -->
+    <div class="card">
+        <div class="card-body">
+            {% if users %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th>Contact</th>
+                            <th>Rôle</th>
+                            <th>Inscription</th>
+                            <th>Statut</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar me-3">
+                                            <i class="bi bi-person-circle fs-3 text-muted"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">{{ user.fullName }}</div>
+                                            <small class="text-muted">ID: {{ user.id }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>{{ user.email }}</div>
+                                    <small class="text-muted">{{ user.phone ?? 'N/A' }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge {{ user.roleBadgeClass }}">{{ user.mainRole }}</span>
+                                </td>
+                                <td>
+                                    <div>{{ user.createdAt|date('d/m/Y') }}</div>
+                                    <small class="text-muted">{{ user.createdAt|date('H:i') }}</small>
+                                </td>
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input status-toggle"
+                                               type="checkbox"
+                                               data-user-id="{{ user.id }}"
+                                            {{ user.isActive ? 'checked' : '' }}>
+                                        <label class="form-check-label">
+                                            <span class="badge bg-{{ user.isActive ? 'success' : 'secondary' }}">
+                                                {{ user.isActive ? 'Actif' : 'Inactif' }}
+                                            </span>
+                                        </label>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ path('admin_user_show', {id: user.id}) }}"
+                                           class="btn btn-outline-info" title="Voir">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="{{ path('admin_user_edit', {id: user.id}) }}"
+                                           class="btn btn-outline-warning" title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        {% if not user.isAdmin or (user.isAdmin and stats.total_admins > 1) %}
+                                            <button type="button"
+                                                    class="btn btn-outline-danger delete-user"
+                                                    data-user-id="{{ user.id }}"
+                                                    data-user-name="{{ user.fullName }}"
+                                                    title="Supprimer">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-people display-1 text-muted"></i>
+                    <h4 class="mt-3">Aucun utilisateur trouvé</h4>
+                    <p class="text-muted">
+                        {% if search or role %}
+                            Aucun utilisateur ne correspond à vos critères de recherche.
+                        {% else %}
+                            Commencez par créer votre premier utilisateur.
+                        {% endif %}
+                    </p>
+                    <a href="{{ path('admin_user_create') }}" class="btn btn-primary">
+                        <i class="bi bi-person-plus"></i> Créer un utilisateur
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Modal de confirmation de suppression -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong id="userName"></strong> ?</p>
+                    <p class="text-danger"><i class="bi bi-exclamation-triangle"></i> Cette action est irréversible.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form method="POST" id="deleteForm" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Gestion du toggle de statut
+        document.querySelectorAll('.status-toggle').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const userId = this.dataset.userId;
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/admin/users/${userId}/toggle-status`;
+                document.body.appendChild(form);
+                form.submit();
+            });
+        });
+
+        // Gestion de la suppression
+        document.querySelectorAll('.delete-user').forEach(button => {
+            button.addEventListener('click', function() {
+                const userId = this.dataset.userId;
+                const userName = this.dataset.userName;
+
+                document.getElementById('userName').textContent = userName;
+                document.getElementById('deleteForm').action = `/admin/users/${userId}/delete`;
+
+                new bootstrap.Modal(document.getElementById('deleteModal')).show();
+            });
+        });
+    </script>
+{% endblock %}
