@@ -8,6 +8,16 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+#Ajout des fichiers et répertoires à ignorer pour le projet Symfony
+.idea
+.env
+.env.dev
+.env.test
+.env.prod
+.env.local
+.editorconfig
+/.env.local.php
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 /.phpunit.cache/
