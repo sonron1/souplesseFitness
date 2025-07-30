@@ -1,0 +1,229 @@
+/* Animations d'apparition des cartes */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(25, 135, 84, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(25, 135, 84, 0.8);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes numberCount {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Cercle parfait pour les icônes */
+.icon-container {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+/* Classes d'animation */
+.abonnement-card {
+    animation: slideInUp 0.6s ease-out forwards;
+    transition: all 0.3s ease;
+}
+
+.abonnement-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.abonnement-card:hover .icon-container {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+.abonnement-actuel {
+    animation: fadeIn 0.8s ease-out;
+}
+
+.current-subscription {
+    animation: pulse 2s infinite;
+}
+
+.icon-rotate:hover {
+    animation: rotate 0.6s ease-in-out;
+}
+
+.badge-float {
+    animation: bounce 2s infinite;
+}
+
+.badge-bounce {
+    animation: bounce 1s ease-out;
+}
+
+.badge-glow {
+    animation: glow 2s infinite;
+}
+
+.badge-shake {
+    animation: shake 0.5s ease-in-out infinite;
+}
+
+.star-pulse {
+    animation: pulse 1.5s infinite;
+}
+
+.price-bounce:hover {
+    animation: bounce 0.6s ease;
+}
+
+.title-slide {
+    animation: slideInLeft 0.8s ease-out;
+}
+
+.description-fade {
+    animation: fadeIn 1s ease-out;
+}
+
+.feature-item {
+    animation: slideInLeft 0.6s ease-out forwards;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.check-bounce:hover {
+    animation: bounce 0.4s ease;
+}
+
+.price-container:hover .price-number {
+    animation: numberCount 0.5s ease;
+    color: var(--bs-figma-orange);
+}
+
+.btn-subscribe {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-subscribe:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+}
+
+.btn-subscribe:active {
+    transform: scale(0.95);
+}
+
+.btn-current {
+    animation: glow 2s infinite;
+}
+
+.btn-contact:hover {
+    animation: pulse 0.6s ease;
+}
+
+.empty-state {
+    animation: fadeIn 1s ease-out;
+}
+
+.empty-icon {
+    animation: bounce 2s infinite;
+}
+
+/* Effet de hover sur les cartes */
+.abonnement-card:hover .price-container {
+    color: var(--bs-figma-orange) !important;
+    transition: color 0.3s ease;
+}
+
+.abonnement-card:hover .badge-float {
+    animation-duration: 1s;
+}
+
+/* Responsive animations */
+@media (max-width: 768px) {
+    .abonnement-card {
+        animation-delay: 0ms !important;
+    }
+
+    .feature-item {
+        animation-delay: 0ms !important;
+    }
+}
+
+/* Désactiver les animations pour les utilisateurs qui préfèrent moins de mouvement */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

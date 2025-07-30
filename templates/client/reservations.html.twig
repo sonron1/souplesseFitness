@@ -1,0 +1,181 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Réservations{% endblock %}
+
+{% block body %}
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Header -->
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="h3 mb-0 text-figma-dark">
+                            <i class="bi bi-calendar-event me-2"></i>Mes Réservations
+                        </h1>
+                        <p class="text-muted mb-0">Gérez vos cours et séances</p>
+                    </div>
+                    <div>
+                        <a href="{{ path('client_dashboard') }}" class="btn btn-figma-outline-dark rounded-pill px-4">
+                            <i class="bi bi-arrow-left me-1"></i>Retour au dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if not abonnement_actif %}
+            <!-- Alerte pas d'abonnement -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-warning rounded-4 p-4 mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-exclamation-triangle-fill fs-1 me-3"></i>
+                            <div>
+                                <h5 class="alert-heading mb-2">Abonnement requis</h5>
+                                <p class="mb-2">Vous devez avoir un abonnement actif pour réserver des cours.</p>
+                                <a href="{{ path('client_abonnements') }}" class="btn btn-warning">
+                                    <i class="bi bi-card-checklist me-1"></i>Voir les abonnements
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row g-4">
+            <!-- Cours réservés -->
+            <div class="col-lg-6">
+                <div class="bg-white rounded-4 shadow-sm p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-calendar-check text-success me-2"></i>
+                        Mes cours réservés ({{ cours_reserves|length }})
+                    </h5>
+
+                    {% if cours_reserves|length > 0 %}
+                        {% for cours in cours_reserves %}
+                            <div class="border rounded-3 p-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-bold mb-1">{{ cours.nom }}</h6>
+                                        <p class="text-muted small mb-1">
+                                            <i class="bi bi-calendar me-1"></i>{{ cours.dateHeure|date('d/m/Y à H:i') }}
+                                        </p>
+                                        <p class="text-muted small mb-1">
+                                            <i class="bi bi-clock me-1"></i>{{ cours.dureeMinutes }} minutes
+                                        </p>
+                                        {% if cours.coach %}
+                                            <p class="text-muted small mb-2">
+                                                <i class="bi bi-person me-1"></i>Coach: {{ cours.coach.nom }} {{ cours.coach.prenom }}
+                                            </p>
+                                        {% endif %}
+                                        <div class="small">
+                                        <span class="badge bg-success">
+                                            {{ cours.clients|length }}/{{ cours.capaciteMax }} places
+                                        </span>
+                                        </div>
+                                    </div>
+                                    <div class="ms-3">
+                                        <form method="post" action="{{ path('client_annuler_cours', {'id': cours.id}) }}"
+                                              onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="bi bi-x-circle me-1"></i>Annuler
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-calendar-x fs-1 text-muted mb-3"></i>
+                            <h6 class="text-muted mb-2">Aucune réservation</h6>
+                            <p class="text-muted small">Vous n'avez pas encore de cours réservés.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Cours disponibles -->
+            <div class="col-lg-6">
+                <div class="bg-white rounded-4 shadow-sm p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-calendar-plus text-primary me-2"></i>
+                        Cours disponibles ({{ cours_disponibles|length }})
+                    </h5>
+
+                    {% if abonnement_actif and cours_disponibles|length > 0 %}
+                        <div style="max-height: 600px; overflow-y: auto;">
+                            {% for cours in cours_disponibles %}
+                                {% set isInscrit = client and client.coursInscrits.contains(cours) %}
+                                {% set isComplet = cours.clients|length >= cours.capaciteMax %}
+
+                                <div class="border rounded-3 p-3 mb-3 {% if isInscrit %}bg-success bg-opacity-10{% elseif isComplet %}bg-danger bg-opacity-10{% endif %}">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <h6 class="fw-bold mb-1">{{ cours.nom }}</h6>
+                                            <p class="text-muted small mb-1">
+                                                <i class="bi bi-calendar me-1"></i>{{ cours.dateHeure|date('d/m/Y à H:i') }}
+                                            </p>
+                                            <p class="text-muted small mb-1">
+                                                <i class="bi bi-clock me-1"></i>{{ cours.dureeMinutes }} minutes
+                                            </p>
+                                            {% if cours.coach %}
+                                                <p class="text-muted small mb-2">
+                                                    <i class="bi bi-person me-1"></i>{{ cours.coach.nom }} {{ cours.coach.prenom }}
+                                                </p>
+                                            {% endif %}
+                                            {% if cours.description %}
+                                                <p class="small text-muted mb-2">{{ cours.description|slice(0, 100) }}...</p>
+                                            {% endif %}
+                                            <div class="small">
+                                            <span class="badge {% if isComplet %}bg-danger{% else %}bg-success{% endif %}">
+                                                {{ cours.clients|length }}/{{ cours.capaciteMax }} places
+                                            </span>
+                                                {% if isInscrit %}
+                                                    <span class="badge bg-primary ms-1">Inscrit</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="ms-3">
+                                            {% if isInscrit %}
+                                                <span class="btn btn-success btn-sm disabled">
+                                                <i class="bi bi-check-circle"></i>
+                                            </span>
+                                            {% elseif isComplet %}
+                                                <span class="btn btn-danger btn-sm disabled">
+                                                <i class="bi bi-x-circle"></i> Complet
+                                            </span>
+                                            {% else %}
+                                                <form method="post" action="{{ path('client_reserver_cours', {'id': cours.id}) }}">
+                                                    <button type="submit" class="btn btn-primary btn-sm">
+                                                        <i class="bi bi-plus-circle me-1"></i>Réserver
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% elseif not abonnement_actif %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-lock fs-1 text-muted mb-3"></i>
+                            <h6 class="text-muted mb-2">Abonnement requis</h6>
+                            <p class="text-muted small">Souscrivez à un abonnement pour réserver des cours.</p>
+                            <a href="{{ path('client_abonnements') }}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-arrow-right me-1"></i>Voir les abonnements
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-calendar-x fs-1 text-muted mb-3"></i>
+                            <h6 class="text-muted mb-2">Aucun cours disponible</h6>
+                            <p class="text-muted small">Il n'y a pas de cours disponibles pour le moment.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

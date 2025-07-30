@@ -1,0 +1,237 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Abonnements{% endblock %}
+
+{% block extra_stylesheets %}
+    <link href="{{ asset('styles/abonnement.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <div class="row">
+            <!-- Header -->
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="h3 mb-0 text-figma-dark">
+                            <i class="bi bi-card-checklist me-2"></i>Mes Abonnements
+                        </h1>
+                        <p class="text-muted mb-0">Gérez vos abonnements fitness</p>
+                    </div>
+                    <div>
+                        <a href="{{ path('client_dashboard') }}" class="btn btn-figma-outline-dark rounded-pill px-4">
+                            <i class="bi bi-arrow-left me-1"></i>Retour au dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Abonnement actuel -->
+        {% if client and client.abonnementActuel %}
+            {% set dateFinAbonnement = client.dateFinAbonnement %}
+            {% set abonnementExpire = dateFinAbonnement and dateFinAbonnement < date() %}
+
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-10">
+                    <div class="abonnement-actuel bg-white rounded-3 shadow-sm p-4 border-start border-4 {% if abonnementExpire %}border-danger{% else %}border-success{% endif %}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="fw-bold mb-1">
+                                    <i class="bi bi-star-fill text-figma-orange me-2 star-pulse"></i>
+                                    Mon abonnement actuel
+                                </h5>
+                                <h4 class="text-figma-dark mb-3">{{ client.abonnementActuel.nom }}</h4>
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <small class="text-muted d-block">Type</small>
+                                        <span class="badge bg-figma-orange text-white badge-float">{{ client.abonnementActuel.type|title }}</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted d-block">Prix</small>
+                                        <strong class="price-bounce">{{ client.abonnementActuel.prix }}€</strong>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted d-block">Date de début</small>
+                                        <span>{{ client.dateDebutAbonnement ? client.dateDebutAbonnement|date('d/m/Y') : 'N/A' }}</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-muted d-block">Date de fin</small>
+                                        <span class="{% if abonnementExpire %}text-danger fw-bold{% else %}text-success{% endif %}">
+                                        {{ dateFinAbonnement ? dateFinAbonnement|date('d/m/Y') : 'N/A' }}
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                {% if abonnementExpire %}
+                                    <span class="badge bg-danger fs-6 px-3 py-2 badge-shake">Expiré</span>
+                                {% else %}
+                                    <span class="badge bg-success fs-6 px-3 py-2 badge-glow">Actif</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% if client.abonnementActuel.description %}
+                            <hr>
+                            <p class="text-muted mb-0 small">{{ client.abonnementActuel.description }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Abonnements disponibles -->
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <h5 class="fw-bold mb-4 text-center">
+                    <i class="bi bi-grid-3x3-gap-fill text-primary me-2"></i>
+                    Abonnements disponibles
+                </h5>
+            </div>
+        </div>
+
+        <div class="row justify-content-center g-4">
+            {% if abonnements|length > 0 %}
+                {% for abonnement in abonnements %}
+                    {% set isAbonnementActuel = client and client.abonnementActuel and client.abonnementActuel.id == abonnement.id %}
+                    {% set delay = loop.index0 * 100 %}
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="abonnement-card bg-white rounded-3 shadow-sm p-4 h-100 position-relative
+                         {% if isAbonnementActuel %}border border-success border-2 current-subscription{% else %}border{% endif %}"
+                             style="animation-delay: {{ delay }}ms;">
+
+                            {% if isAbonnementActuel %}
+                                <div class="position-absolute top-0 end-0 p-2">
+                                <span class="badge bg-success rounded-pill badge-bounce">
+                                    <i class="bi bi-check-circle me-1"></i>Actuel
+                                </span>
+                                </div>
+                            {% endif %}
+
+                            <div class="text-center mb-3">
+                                <div class="icon-container bg-figma-yellow bg-opacity-20 mb-3 mx-auto">
+                                    {% if abonnement.type == 'seance' %}
+                                        <i class="bi bi-lightning-fill text-figma-orange fs-5 icon-rotate"></i>
+                                    {% elseif abonnement.type == 'hebdomadaire' %}
+                                        <i class="bi bi-calendar-week-fill text-figma-orange fs-5 icon-rotate"></i>
+                                    {% elseif abonnement.type == 'mensuel' %}
+                                        <i class="bi bi-calendar-month-fill text-figma-orange fs-5 icon-rotate"></i>
+                                    {% elseif abonnement.type == 'trimestriel' %}
+                                        <i class="bi bi-calendar-range-fill text-figma-orange fs-5 icon-rotate"></i>
+                                    {% elseif abonnement.type == 'annuel' %}
+                                        <i class="bi bi-calendar-fill text-figma-orange fs-5 icon-rotate"></i>
+                                    {% else %}
+                                        <i class="bi bi-trophy-fill text-figma-orange fs-5 icon-rotate"></i>
+                                    {% endif %}
+                                </div>
+                                <h5 class="fw-bold mb-2 title-slide">{{ abonnement.nom }}</h5>
+                                <span class="badge bg-light text-dark border mb-2 badge-float">{{ abonnement.type|title }}</span>
+                                {% if abonnement.description %}
+                                    <p class="text-muted small mb-0 description-fade">{{ abonnement.description|slice(0, 80) }}{% if abonnement.description|length > 80 %}...{% endif %}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="text-center mb-3">
+                                <div class="price-container h2 fw-bold text-figma-dark mb-0">
+                                    <span class="price-number">{{ abonnement.prix }}</span><span class="price-currency">€</span>
+                                </div>
+                                <small class="text-muted">
+                                    {% if abonnement.type == 'seance' %}
+                                        /séance
+                                    {% elseif abonnement.type == 'hebdomadaire' %}
+                                        /semaine
+                                    {% elseif abonnement.type == 'mensuel' %}
+                                        /mois
+                                    {% elseif abonnement.type == 'trimestriel' %}
+                                        /3 mois
+                                    {% elseif abonnement.type == 'annuel' %}
+                                        /an
+                                    {% endif %}
+                                </small>
+                                <div class="small text-muted mt-1">
+                                    {% if abonnement.type == 'seance' %}
+                                        Accès immédiat
+                                    {% else %}
+                                        {{ abonnement.dureeJours }} jours
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <ul class="list-unstyled small mb-0 features-list">
+                                    <li class="mb-1 feature-item" style="animation-delay: {{ delay + 100 }}ms;">
+                                        <i class="bi bi-check-circle-fill text-success me-2 check-bounce"></i>
+                                        {% if abonnement.type == 'seance' %}
+                                            Accès salle de sport
+                                        {% else %}
+                                            Accès tous équipements
+                                        {% endif %}
+                                    </li>
+                                    <li class="mb-1 feature-item" style="animation-delay: {{ delay + 200 }}ms;">
+                                        <i class="bi bi-check-circle-fill text-success me-2 check-bounce"></i>
+                                        {% if abonnement.type == 'seance' %}
+                                            Durée limitée (2h)
+                                        {% else %}
+                                            Réservation cours collectifs
+                                        {% endif %}
+                                    </li>
+                                    {% if abonnement.type != 'seance' and abonnement.type != 'hebdomadaire' %}
+                                        <li class="mb-1 feature-item" style="animation-delay: {{ delay + 300 }}ms;">
+                                            <i class="bi bi-check-circle-fill text-success me-2 check-bounce"></i>
+                                            Coaching personnalisé
+                                        </li>
+                                    {% endif %}
+                                    {% if abonnement.type == 'hebdomadaire' %}
+                                        <li class="mb-1 feature-item" style="animation-delay: {{ delay + 300 }}ms;">
+                                            <i class="bi bi-check-circle-fill text-success me-2 check-bounce"></i>
+                                            Accès 7 jours consécutifs
+                                        </li>
+                                    {% endif %}
+                                    {% if abonnement.type == 'annuel' %}
+                                        <li class="mb-1 feature-item" style="animation-delay: {{ delay + 400 }}ms;">
+                                            <i class="bi bi-check-circle-fill text-success me-2 check-bounce"></i>
+                                            Accès invité gratuit
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+
+                            <div class="d-grid mt-auto">
+                                {% if isAbonnementActuel %}
+                                    <button class="btn btn-success rounded-pill py-2 btn-current" disabled>
+                                        <i class="bi bi-check-circle me-1"></i>Abonnement actuel
+                                    </button>
+                                {% else %}
+                                    <form method="post" action="{{ path('client_souscrire_abonnement', {'id': abonnement.id}) }}"
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir souscrire à cet abonnement pour {{ abonnement.prix }}€ ?')">
+                                        <button type="submit" class="btn btn-figma-yellow rounded-pill py-2 w-100 btn-subscribe">
+                                            <i class="bi bi-credit-card me-1"></i>
+                                            {% if abonnement.type == 'seance' %}
+                                                Acheter la séance
+                                            {% else %}
+                                                Souscrire
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-lg-8">
+                    <div class="bg-white rounded-3 shadow-sm p-5 text-center empty-state">
+                        <i class="bi bi-card-text fs-1 text-muted mb-3 empty-icon"></i>
+                        <h5 class="text-muted mb-2">Aucun abonnement disponible</h5>
+                        <p class="text-muted">Les abonnements seront bientôt disponibles.</p>
+                        <a href="{{ path('app_home') }}#contact" class="btn btn-figma-yellow rounded-pill btn-contact">
+                            <i class="bi bi-envelope me-1"></i>Nous contacter
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
