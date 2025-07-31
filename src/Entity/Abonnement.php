@@ -37,6 +37,18 @@ class Abonnement
     #[ORM\Column]
     private ?\DateTime $dateCreation = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $categorie = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $enPromotion = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $prixOriginal = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $promotionActive = null;
+
     /**
      * @var Collection<int, Client>
      */
@@ -46,6 +58,10 @@ class Abonnement
     public function __construct()
     {
         $this->clients = new ArrayCollection();
+        $this->dateCreation = new \DateTime();
+        $this->actif = true;
+        $this->enPromotion = false;
+        $this->promotionActive = false;
     }
 
     public function getId(): ?int
@@ -135,6 +151,75 @@ class Abonnement
         $this->dateCreation = $dateCreation;
 
         return $this;
+    }
+
+    public function getCategorie(): ?string
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?string $categorie): static
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function isEnPromotion(): ?bool
+    {
+        return $this->enPromotion;
+    }
+
+    public function setEnPromotion(?bool $enPromotion): static
+    {
+        $this->enPromotion = $enPromotion;
+
+        return $this;
+    }
+
+    public function getPrixOriginal(): ?int
+    {
+        return $this->prixOriginal;
+    }
+
+    public function setPrixOriginal(?int $prixOriginal): static
+    {
+        $this->prixOriginal = $prixOriginal;
+
+        return $this;
+    }
+
+    public function isPromotionActive(): ?bool
+    {
+        return $this->promotionActive;
+    }
+
+    public function setPromotionActive(?bool $promotionActive): static
+    {
+        $this->promotionActive = $promotionActive;
+
+        return $this;
+    }
+
+    public function getPrixAffiche(): int
+    {
+        return $this->isEnPromotion() && $this->isPromotionActive() ? $this->prix : ($this->prixOriginal ?? $this->prix);
+    }
+
+    public function getReduction(): ?int
+    {
+        if ($this->isEnPromotion() && $this->isPromotionActive() && $this->prixOriginal) {
+            return $this->prixOriginal - $this->prix;
+        }
+        return null;
+    }
+
+    public function getPourcentageReduction(): ?int
+    {
+        if ($this->isEnPromotion() && $this->isPromotionActive() && $this->prixOriginal) {
+            return round((($this->prixOriginal - $this->prix) / $this->prixOriginal) * 100);
+        }
+        return null;
     }
 
     /**

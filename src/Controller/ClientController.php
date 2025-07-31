@@ -70,6 +70,42 @@ class ClientController extends AbstractController
         ]);
     }
 
+    #[Route('/abonnements', name: 'client_abonnements')]
+    public function abonnements(
+        AbonnementRepository $abonnementRepo,
+        ClientRepository $clientRepo
+    ): Response {
+        $user = $this->getUser();
+        $client = $clientRepo->findOneBy(['email' => $user->getEmail()]);
+        $abonnements = $abonnementRepo->findBy(['actif' => true], ['categorie' => 'ASC', 'prix' => 'ASC']);
+
+        // Organiser les abonnements par catégories
+        $abonnementsParCategorie = [
+            'simple' => [],
+            'couple' => [],
+            'promo' => []
+        ];
+
+        foreach ($abonnements as $abonnement) {
+            $categorie = $abonnement->getCategorie() ?? 'simple';
+
+            if ($abonnement->isEnPromotion() && $abonnement->isPromotionActive()) {
+                $abonnementsParCategorie['promo'][] = $abonnement;
+            } elseif (str_contains(strtolower($abonnement->getNom()), 'couple') || $categorie === 'couple') {
+                $abonnementsParCategorie['couple'][] = $abonnement;
+            } else {
+                $abonnementsParCategorie['simple'][] = $abonnement;
+            }
+        }
+
+        return $this->render('client/abonnements.html.twig', [
+            'user' => $user,
+            'client' => $client,
+            'abonnements' => $abonnements,
+            'abonnementsParCategorie' => $abonnementsParCategorie,
+        ]);
+    }
+
     #[Route('/reservations', name: 'client_reservations')]
     public function reservations(
         CoursRepository $coursRepo,
@@ -98,7 +134,7 @@ class ClientController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        // Cours déjà réservés par le client
+        // Cours réservés par le client
         $cours_reserves = $client ? $client->getCoursInscrits() : [];
 
         return $this->render('client/reservations.html.twig', [
@@ -106,140 +142,59 @@ class ClientController extends AbstractController
             'client' => $client,
             'cours_disponibles' => $cours_disponibles,
             'cours_reserves' => $cours_reserves,
-            'abonnement_actif' => $abonnementActif,
         ]);
     }
 
-    #[Route('/reserver-cours/{id}', name: 'client_reserver_cours', methods: ['POST'])]
-    public function reserverCours(
+    #[Route('/souscrire/{id}', name: 'client_souscrire_abonnement', methods: ['POST'])]
+    public function souscrireAbonnement(
         int $id,
-        CoursRepository $coursRepo,
+        Request $request,
+        AbonnementRepository $abonnementRepo,
         ClientRepository $clientRepo,
-        EntityManagerInterface $em
+        EntityManagerInterface $entityManager
     ): Response {
-        $user = $this->getUser();
-        $client = $clientRepo->findOneBy(['email' => $user->getEmail()]);
-        $cours = $coursRepo->find($id);
-
-        if (!$cours) {
-            $this->addFlash('error', 'Cours introuvable.');
-            return $this->redirectToRoute('client_reservations');
-        }
-
-        // Vérifier abonnement actif
-        $abonnementActif = $client && $client->getAbonnementActuel() &&
-            $client->getDateFinAbonnement() &&
-            $client->getDateFinAbonnement() > new \DateTime();
-
-        if (!$abonnementActif) {
-            $this->addFlash('error', 'Vous devez avoir un abonnement actif pour réserver.');
+        // Vérification du token CSRF
+        if (!$this->isCsrfTokenValid('subscribe_abonnement', $request->request->get('_token'))) {
+            $this->addFlash('error', 'Token de sécurité invalide.');
             return $this->redirectToRoute('client_abonnements');
         }
 
-        // Vérifier si déjà inscrit
-        if ($client->getCoursInscrits()->contains($cours)) {
-            $this->addFlash('warning', 'Vous êtes déjà inscrit à ce cours.');
-            return $this->redirectToRoute('client_reservations');
-        }
-
-        // Vérifier la capacité
-        if ($cours->getClients()->count() >= $cours->getCapaciteMax()) {
-            $this->addFlash('error', 'Ce cours est complet.');
-            return $this->redirectToRoute('client_reservations');
-        }
-
-        // Effectuer la réservation
-        $client->addCoursInscrit($cours);
-        $em->flush();
-
-        $this->addFlash('success', "Vous êtes inscrit au cours '{$cours->getNom()}' du " . $cours->getDateHeure()->format('d/m/Y à H:i'));
-        return $this->redirectToRoute('client_reservations');
-    }
-
-    #[Route('/annuler-cours/{id}', name: 'client_annuler_cours', methods: ['POST'])]
-    public function annulerCours(
-        int $id,
-        CoursRepository $coursRepo,
-        ClientRepository $clientRepo,
-        EntityManagerInterface $em
-    ): Response {
-        $user = $this->getUser();
-        $client = $clientRepo->findOneBy(['email' => $user->getEmail()]);
-        $cours = $coursRepo->find($id);
-
-        if (!$cours || !$client) {
-            $this->addFlash('error', 'Cours ou client introuvable.');
-            return $this->redirectToRoute('client_reservations');
-        }
-
-        if ($client->getCoursInscrits()->contains($cours)) {
-            $client->removeCoursInscrit($cours);
-            $em->flush();
-            $this->addFlash('success', "Votre réservation pour le cours '{$cours->getNom()}' a été annulée.");
-        } else {
-            $this->addFlash('warning', 'Vous n\'êtes pas inscrit à ce cours.');
-        }
-
-        return $this->redirectToRoute('client_reservations');
-    }
-
-    #[Route('/abonnements', name: 'client_abonnements')]
-    public function abonnements(
-        AbonnementRepository $abonnementRepo,
-        ClientRepository $clientRepo
-    ): Response {
-        $user = $this->getUser();
-        $client = $clientRepo->findOneBy(['email' => $user->getEmail()]);
-        $abonnements = $abonnementRepo->findBy(['actif' => true]);
-
-        return $this->render('client/abonnements.html.twig', [
-            'user' => $user,
-            'client' => $client,
-            'abonnements' => $abonnements,
-        ]);
-    }
-
-    #[Route('/souscrire-abonnement/{id}', name: 'client_souscrire_abonnement', methods: ['POST'])]
-    public function souscrireAbonnement(
-        int $id,
-        AbonnementRepository $abonnementRepo,
-        ClientRepository $clientRepo,
-        EntityManagerInterface $em
-    ): Response {
         $user = $this->getUser();
         $client = $clientRepo->findOneBy(['email' => $user->getEmail()]);
         $abonnement = $abonnementRepo->find($id);
 
-        if (!$abonnement) {
-            $this->addFlash('error', 'Abonnement introuvable.');
+        if (!$abonnement || !$abonnement->isActif()) {
+            $this->addFlash('error', 'Abonnement non trouvé ou inactif.');
             return $this->redirectToRoute('client_abonnements');
         }
 
-        // Créer un client si il n'existe pas
-        if (!$client) {
-            $client = new Client();
-            $client->setEmail($user->getEmail());
-            $client->setNom($user->getLastName() ?? 'Client');
-            $client->setPrenom($user->getFirstName() ?? 'Nouveau');
-            $client->setDateInscription(new \DateTime());
-            $client->setActif(true);
-            $client->setNumeroMembre('MB' . str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT));
-            $client->setPointsFidelite(0);
-            $em->persist($client);
+        // Vérifier si les promotions sont actives
+        if ($abonnement->isEnPromotion() && !$abonnement->isPromotionActive()) {
+            $this->addFlash('error', 'Cette promotion n\'est plus active.');
+            return $this->redirectToRoute('client_abonnements');
         }
 
-        // Souscrire à l'abonnement
+        if (!$client) {
+            // Créer un client s'il n'existe pas
+            $client = new Client();
+            $client->setEmail($user->getEmail());
+            $client->setNom($user->getLastName() ?? '');
+            $client->setPrenom($user->getFirstName() ?? '');
+            $client->setPointsFidelite(0);
+            $entityManager->persist($client);
+        }
+
+        // Mettre à jour l'abonnement du client
         $client->setAbonnementActuel($abonnement);
-        $client->setTypeAbonnement($abonnement->getType());
         $client->setDateDebutAbonnement(new \DateTime());
 
-        $dateFinAbonnement = new \DateTime();
-        $dateFinAbonnement->add(new \DateInterval('P' . $abonnement->getDureeJours() . 'D'));
-        $client->setDateFinAbonnement($dateFinAbonnement);
+        $dateFin = new \DateTime();
+        $dateFin->add(new \DateInterval('P' . $abonnement->getDureeJours() . 'D'));
+        $client->setDateFinAbonnement($dateFin);
 
-        $em->flush();
+        $entityManager->flush();
 
-        $this->addFlash('success', "Félicitations ! Vous avez souscrit à l'abonnement '{$abonnement->getNom()}'. Votre abonnement est actif jusqu'au " . $dateFinAbonnement->format('d/m/Y'));
+        $this->addFlash('success', 'Abonnement souscrit avec succès ! Votre abonnement est maintenant actif.');
 
         return $this->redirectToRoute('client_dashboard');
     }
@@ -250,84 +205,20 @@ class ClientController extends AbstractController
             return 0;
         }
 
-        // Logique simplifiée - à adapter selon vos besoins
         $abonnement = $client->getAbonnementActuel();
-        $seancesUtilisees = $client->getCoursInscrits()->count();
 
-        // Par exemple, 10 séances par abonnement mensuel
-        $seancesIncluses = match($abonnement->getType()) {
-            'mensuel' => 10,
-            'trimestriel' => 30,
-            'annuel' => 120,
-            default => 10
-        };
-
-        return max(0, $seancesIncluses - $seancesUtilisees);
-    }
-
-    // Anciens contrôleurs pour la gestion des entités Client
-    #[Route('/liste', name: 'client_index')]
-    public function index(ClientRepository $clientRepository): Response
-    {
-        $clients = $clientRepository->findAll();
-
-        return $this->render('client/index.html.twig', [
-            'clients' => $clients,
-        ]);
-    }
-
-    #[Route('/new', name: 'client_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em): Response
-    {
-        if ($request->isMethod('POST')) {
-            $client = new Client();
-            $client->setNom($request->request->get('nom'));
-            $client->setPrenom($request->request->get('prenom'));
-            $client->setEmail($request->request->get('email'));
-            $client->setTelephone($request->request->get('telephone'));
-
-            $em->persist($client);
-            $em->flush();
-
-            return $this->redirectToRoute('client_index');
+        // Pour les abonnements à séances limitées
+        if (in_array($abonnement->getType(), ['seance', 'carnet'])) {
+            // Logique pour calculer les séances restantes
+            // À implémenter selon la logique métier
+            return 10; // Valeur par défaut
         }
 
-        return $this->render('client/new.html.twig');
-    }
-
-    #[Route('/{id}', name: 'client_show', methods: ['GET'])]
-    public function show(Client $client): Response
-    {
-        return $this->render('client/show.html.twig', [
-            'client' => $client,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'client_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Client $client, EntityManagerInterface $em): Response
-    {
-        if ($request->isMethod('POST')) {
-            $client->setNom($request->request->get('nom'));
-            $client->setPrenom($request->request->get('prenom'));
-            $client->setEmail($request->request->get('email'));
-            $client->setTelephone($request->request->get('telephone'));
-
-            $em->flush();
-
-            return $this->redirectToRoute('client_index');
+        // Pour les abonnements illimités
+        if ($client->getDateFinAbonnement() && $client->getDateFinAbonnement() > new \DateTime()) {
+            return 999; // Illimité
         }
 
-        return $this->render('client/edit.html.twig', [
-            'client' => $client,
-        ]);
-    }
-
-    #[Route('/{id}/delete', name: 'client_delete', methods: ['POST'])]
-    public function delete(Client $client, EntityManagerInterface $em): Response
-    {
-        $em->remove($client);
-        $em->flush();
-
-        return $this->redirectToRoute('client_index');
+        return 0;
     }
 }

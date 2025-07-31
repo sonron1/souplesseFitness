@@ -77,11 +77,11 @@
                                     <i class="bi bi-person-circle me-1"></i>
                                     {{ app.user.firstName ?? app.user.email|split('@')[0] }}
                                     {% if is_granted('ROLE_ADMIN') %}
-                                        <span class="badge bg-danger ms-1">Admin</span>
+                                        <span class="badge bg-dark ms-1">Admin</span>
                                     {% elseif is_granted('ROLE_COACH') %}
-                                        <span class="badge bg-info ms-1">Coach</span>
+                                        <span class="badge bg-dark ms-1">Coach</span>
                                     {% elseif is_granted('ROLE_CLIENT') %}
-                                        <span class="badge bg-success ms-1">Client</span>
+                                        <span class="badge bg-dark ms-1">Client</span>
                                     {% endif %}
                                 </button>
                                 <ul class="dropdown-menu">

@@ -1,5 +1,17 @@
+/* Variables CSS personnalisées */
+:root {
+    --figma-orange: #ff8c00;
+    --figma-dark: #212529;
+    --figma-success: #198754;
+    --figma-danger: #dc3545;
+    --figma-warning: #ffc107;
+    --figma-info: #0dcaf0;
+}
 
-/* Animations d'apparition des cartes */
+/* =========================== */
+/* ANIMATIONS */
+/* =========================== */
+
 @keyframes slideInUp {
     from {
         opacity: 0;
@@ -93,12 +105,51 @@
     }
 }
 
-/* Styles spécifiques pour les formules compactes */
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes slidePromo {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
+}
+
+@keyframes priceGlow {
+    0%, 100% { text-shadow: 0 0 5px rgba(220, 53, 69, 0.5); }
+    50% { text-shadow: 0 0 20px rgba(220, 53, 69, 0.8); }
+}
+
+@keyframes sectionSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes strikethrough {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* =========================== */
+/* CARTES ABONNEMENTS PRINCIPALES */
+/* =========================== */
+
 .abonnement-card {
     animation: slideInUp 0.6s ease-out forwards;
     transition: all 0.3s ease;
-    min-height: 280px;
-    max-height: 320px;
+    min-height: 400px; /* Augmenté pour plus d'espace */
+    max-height: 450px; /* Augmenté pour plus d'espace */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
 }
 
 .abonnement-card:hover {
@@ -110,6 +161,240 @@
     transform: scale(1.1);
     transition: transform 0.3s ease;
 }
+
+.abonnement-card .card-body {
+    padding: 1.5rem !important; /* Plus de padding */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Section en tête de carte */
+.abonnement-card .text-center:first-of-type {
+    flex-shrink: 0;
+    height: 130px; /* Augmenté */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+/* Icône container */
+.icon-container {
+    width: 50px !important; /* Augmenté */
+    height: 50px !important; /* Augmenté */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+}
+
+/* Titre de l'abonnement */
+.abonnement-card h6 {
+    font-size: 1rem !important; /* Augmenté */
+    line-height: 1.3 !important;
+    height: 2.6em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin-bottom: 0.75rem !important;
+}
+
+/* Badge type */
+.badge-float {
+    font-size: 0.7rem !important;
+    padding: 0.3rem 0.6rem !important;
+    white-space: nowrap;
+}
+
+/* Section description */
+.description-fade {
+    height: 60px !important; /* Augmenté */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    font-size: 0.8rem !important; /* Augmenté */
+    line-height: 1.3 !important;
+    margin-bottom: 1.25rem !important;
+}
+
+/* Section prix */
+.price-container {
+    height: 60px !important; /* Augmenté */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-bottom: 1rem;
+}
+
+.price-number {
+    font-size: 1.5rem !important; /* Augmenté */
+    font-weight: bold !important;
+    color: var(--figma-dark) !important;
+}
+
+.price-currency {
+    font-size: 1rem !important; /* Augmenté */
+    font-weight: 600 !important;
+    color: var(--figma-orange) !important;
+}
+
+/* Liste des caractéristiques */
+.features-list {
+    height: 90px !important; /* Augmenté */
+    overflow: hidden;
+    margin-bottom: 1.5rem !important; /* Augmenté */
+}
+
+.features-list li {
+    line-height: 1.4;
+    font-size: 0.8rem !important; /* Augmenté */
+    margin-bottom: 0.4rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Container des boutons */
+.mt-auto {
+    margin-top: auto !important;
+    flex-shrink: 0;
+    /* padding-top: 1rem;  Ajout d'espace */
+}
+
+/* =========================== */
+/* BOUTONS - FORCE AFFICHAGE */
+/* =========================== */
+
+.btn-subscribe,
+.btn-current,
+.abonnement-card .btn {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    min-height: 45px !important; /* Augmenté */
+    background-color: var(--figma-dark) !important;
+    color: white !important;
+    border: 1px solid var(--figma-dark) !important;
+    padding: 0.75rem 1rem !important; /* Augmenté */
+    border-radius: 0.375rem !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important; /* Augmenté */
+    text-align: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-subscribe:hover,
+.btn-subscribe:focus {
+    background-color: #1a1e21 !important;
+    border-color: #1a1e21 !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+}
+
+.btn-current {
+    background-color: var(--figma-success) !important;
+    border-color: var(--figma-success) !important;
+    opacity: 0.8 !important;
+    cursor: not-allowed !important;
+}
+
+/* =========================== */
+/* COULEURS FORCÉES */
+/* =========================== */
+
+.abonnement-card .icon-container.bg-primary,
+.abonnement-card .icon-container.bg-dark {
+    background-color: var(--figma-dark) !important;
+}
+
+.abonnement-card .badge.bg-primary,
+.abonnement-card .badge.bg-dark {
+    background-color: var(--figma-dark) !important;
+}
+
+/* =========================== */
+/* CARTES PROMO */
+/* =========================== */
+
+.promo-card {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--figma-danger) !important;
+}
+
+.promo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: slidePromo 2s infinite;
+}
+
+.promo-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(220, 53, 69, 0.3);
+}
+
+.promo-card .price-number {
+    animation: priceGlow 2s infinite;
+    color: var(--figma-danger) !important;
+}
+
+.promo-card .icon-container.bg-danger,
+.promo-card .badge.bg-danger {
+    background-color: var(--figma-danger) !important;
+}
+
+.badge-reduction {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(45deg, var(--figma-danger), #ff6b6b);
+    animation: pulse 1.5s infinite;
+}
+
+/* =========================== */
+/* SECTIONS ET HEADERS */
+/* =========================== */
+
+.section-header {
+    position: relative;
+    overflow: hidden;
+    animation: sectionSlideIn 0.8s ease-out;
+}
+
+.section-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+.section-header h5 {
+    margin-bottom: 0.5rem;
+}
+
+.section-header p {
+    margin-bottom: 0;
+}
+
+/* =========================== */
+/* ANIMATIONS SPÉCIFIQUES */
+/* =========================== */
 
 .abonnement-actuel {
     animation: fadeIn 0.8s ease-out;
@@ -135,10 +420,6 @@
     animation: shake 0.5s ease-in-out infinite;
 }
 
-.badge-float {
-    animation: fadeIn 0.8s ease-out;
-}
-
 .star-pulse {
     animation: pulse 1.5s infinite;
 }
@@ -151,26 +432,12 @@
     animation: slideInLeft 0.6s ease-out;
 }
 
-.description-fade {
-    animation: fadeIn 1s ease-out;
-}
-
 .feature-item {
     animation: slideInLeft 0.6s ease-out;
 }
 
 .check-bounce {
     animation: bounce 1s ease-out;
-}
-
-.btn-subscribe:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.btn-current {
-    opacity: 0.8;
-    cursor: not-allowed;
 }
 
 .empty-state {
@@ -185,46 +452,171 @@
     transform: scale(1.05);
 }
 
-/* Modal animations */
+/* =========================== */
+/* MODAL */
+/* =========================== */
+
 .modal-content {
     animation: modalSlideIn 0.3s ease-out;
 }
 
-/* Responsive adjustments for compact cards */
+/* =========================== */
+/* FILTRAGE */
+/* =========================== */
+
+.abonnement-item {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 1rem;
+}
+
+.abonnement-item[style*="display: none"] {
+    transform: scale(0.8);
+    opacity: 0;
+}
+
+/* =========================== */
+/* RESPONSIVE MOBILE */
+/* =========================== */
+
 @media (max-width: 768px) {
     .abonnement-card {
-        min-height: 260px;
-        max-height: 300px;
+        min-height: 380px; /* Ajusté pour mobile */
+        max-height: 420px;
+    }
+
+    .abonnement-card .card-body {
+        padding: 1.25rem !important;
+    }
+
+    .abonnement-card .text-center:first-of-type {
+        height: 110px;
     }
 
     .icon-container {
-        width: 40px !important;
-        height: 40px !important;
+        width: 45px !important;
+        height: 45px !important;
     }
 
     .price-container {
+        height: 50px !important;
+    }
+
+    .price-number {
         font-size: 1.3rem !important;
+    }
+
+    .features-list {
+        height: 80px !important;
+    }
+
+    .description-fade {
+        height: 50px !important;
+        font-size: 0.75rem !important;
+    }
+
+    .abonnement-card h6 {
+        font-size: 0.9rem !important;
+    }
+
+    .btn-subscribe,
+    .btn-current {
+        min-height: 40px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* Scroll horizontal pour mobile */
+    .abonnements-scroll {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 1rem;
+        scroll-snap-type: x mandatory;
+        gap: 1rem;
+    }
+
+    .abonnements-scroll .abonnement-item {
+        flex: 0 0 280px; /* Augmenté pour mobile */
+        scroll-snap-align: start;
+    }
+
+    .abonnements-scroll::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .abonnements-scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+    }
+
+    .abonnements-scroll::-webkit-scrollbar-thumb {
+        background: var(--figma-dark);
+        border-radius: 2px;
     }
 }
 
-/* Filter transition */
-.abonnement-item {
-    transition: opacity 0.3s ease-in-out;
+/* Indicateur de scroll mobile */
+.scroll-indicator {
+    display: none;
+    text-align: center;
+    margin-top: 0.5rem;
+    color: #6c757d;
+    font-size: 0.8rem;
 }
 
-/* Prix en FCFA styling */
-.price-currency {
-    font-weight: 600;
-    color: var(--figma-orange);
+@media (max-width: 768px) {
+    .scroll-indicator {
+        display: block;
+    }
 }
 
-/* Compact features list */
-.features-list li {
-    line-height: 1.3;
+/* =========================== */
+/* DIVERS */
+/* =========================== */
+
+.text-decoration-line-through {
+    position: relative;
 }
 
-/* Category badges */
-.badge-float {
-    font-size: 0.7rem !important;
-    padding: 0.25rem 0.5rem;
+.text-decoration-line-through::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--figma-danger);
+    animation: strikethrough 0.5s ease-out;
+}
+
+.btn-admin-toggle {
+    transition: all 0.3s ease;
+}
+
+.btn-admin-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Styles pour les cartes couple */
+.abonnement-card:has(.bi-people-fill) {
+    border-left: 4px solid var(--figma-success);
+}
+
+.abonnement-card:has(.bi-people-fill):hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(25, 135, 84, 0.2);
+}
+
+/* Responsive pour les sections */
+@media (max-width: 768px) {
+    .section-header h5 {
+        font-size: 1rem;
+    }
+
+    .section-header p {
+        font-size: 0.8rem;
+    }
+
+    .promo-card::before {
+        animation-duration: 3s;
+    }
 }

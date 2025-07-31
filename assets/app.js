@@ -15,6 +15,7 @@ import 'animate.css';
 import './js/register';
 import './js/custom';
 import './js/admin';
+import './js/abonnement'
 
 // Import du bootstrap Stimulus
 import './bootstrap';
