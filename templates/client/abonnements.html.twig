@@ -34,40 +34,40 @@
 
             <div class="row justify-content-center mb-4">
                 <div class="col-lg-10">
-                    <div class="abonnement-actuel bg-white rounded-3 shadow-sm p-4 border-start border-4 {% if abonnementExpire %}border-danger{% else %}border-success{% endif %}">
+                    <div class="abonnement-actuel bg-white rounded-3 shadow-sm p-3 border-start border-4 {% if abonnementExpire %}border-danger{% else %}border-success{% endif %}">
                         <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="fw-bold mb-1">
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">
                                     <i class="bi bi-star-fill text-figma-orange me-2 star-pulse"></i>
                                     Mon abonnement actuel
-                                </h5>
-                                <h4 class="text-figma-dark mb-3">{{ client.abonnementActuel.nom }}</h4>
-                                <div class="row g-3">
-                                    <div class="col-md-3">
+                                </h6>
+                                <h5 class="text-figma-dark mb-2">{{ client.abonnementActuel.nom }}</h5>
+                                <div class="row g-2">
+                                    <div class="col-lg-3 col-md-6">
                                         <small class="text-muted d-block">Type</small>
                                         <span class="badge bg-figma-orange text-white badge-float">{{ client.abonnementActuel.type|title }}</span>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-lg-3 col-md-6">
                                         <small class="text-muted d-block">Prix</small>
-                                        <strong class="price-bounce">{{ client.abonnementActuel.prix }}€</strong>
+                                        <strong class="price-bounce">{{ client.abonnementActuel.prix }} FCFA</strong>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-lg-3 col-md-6">
                                         <small class="text-muted d-block">Date de début</small>
-                                        <span>{{ client.dateDebutAbonnement ? client.dateDebutAbonnement|date('d/m/Y') : 'N/A' }}</span>
+                                        <span class="fw-medium">{{ client.dateDebutAbonnement ? client.dateDebutAbonnement|date('d/m/Y') : 'N/A' }}</span>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-lg-3 col-md-6">
                                         <small class="text-muted d-block">Date de fin</small>
-                                        <span class="{% if abonnementExpire %}text-danger fw-bold{% else %}text-success{% endif %}">
-                                        {{ dateFinAbonnement ? dateFinAbonnement|date('d/m/Y') : 'N/A' }}
-                                    </span>
+                                        <span class="fw-medium {% if abonnementExpire %}text-danger{% else %}text-success{% endif %}">
+                                            {{ dateFinAbonnement ? dateFinAbonnement|date('d/m/Y') : 'N/A' }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div class="ms-3">
                                 {% if abonnementExpire %}
-                                    <span class="badge bg-danger fs-6 px-3 py-2 badge-shake">Expiré</span>
+                                    <span class="badge bg-danger fs-6 px-2 py-1 badge-shake">Expiré</span>
                                 {% else %}
-                                    <span class="badge bg-success fs-6 px-3 py-2 badge-glow">Actif</span>
+                                    <span class="badge bg-success fs-6 px-2 py-1 badge-glow">Actif</span>
                                 {% endif %}
                             </div>
                         </div>
@@ -81,24 +81,40 @@
             </div>
         {% endif %}
 
-        <!-- Abonnements disponibles -->
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <h5 class="fw-bold mb-4 text-center">
-                    <i class="bi bi-grid-3x3-gap-fill text-primary me-2"></i>
-                    Abonnements disponibles
-                </h5>
+        <!-- Filtres des abonnements -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-8">
+                <div class="bg-white rounded-3 shadow-sm p-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold mb-2 text-center">
+                                <i class="bi bi-grid-3x3-gap-fill text-primary me-2"></i>
+                                Abonnements disponibles
+                            </h6>
+                        </div>
+                        <div class="col-md-6">
+                            <select id="filterAbonnements" class="form-select form-select-sm">
+                                <option value="all">Toutes les formules</option>
+                                <option value="seance">Séances uniques</option>
+                                <option value="carnet">Carnets de séances</option>
+                                <option value="mensuel">Abonnements mensuels</option>
+                                <option value="trimestriel">Abonnements trimestriels</option>
+                                <option value="annuel">Abonnements annuels</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="row justify-content-center g-4">
+        <div class="row justify-content-center g-3" id="abonnementsContainer">
             {% if abonnements|length > 0 %}
                 {% for abonnement in abonnements %}
                     {% set isAbonnementActuel = client and client.abonnementActuel and client.abonnementActuel.id == abonnement.id %}
                     {% set delay = loop.index0 * 100 %}
 
-                    <div class="col-lg-4 col-md-6">
-                        <div class="abonnement-card bg-white rounded-3 shadow-sm p-4 h-100 position-relative
+                    <div class="col-lg-3 col-md-4 col-sm-6 abonnement-item" data-type="{{ abonnement.type }}">
+                        <div class="abonnement-card bg-white rounded-3 shadow-sm p-3 h-100 position-relative
                          {% if isAbonnementActuel %}border border-success border-2 current-subscription{% else %}border{% endif %}"
                              style="animation-delay: {{ delay }}ms;">
 
@@ -110,36 +126,45 @@
                                 </div>
                             {% endif %}
 
-                            <div class="text-center mb-3">
-                                <div class="icon-container bg-figma-yellow bg-opacity-20 mb-3 mx-auto">
+                            <div class="text-center mb-2">
+                                <div class="icon-container bg-figma-yellow bg-opacity-20 mb-2 mx-auto" style="width: 45px; height: 45px;">
                                     {% if abonnement.type == 'seance' %}
-                                        <i class="bi bi-lightning-fill text-figma-orange fs-5 icon-rotate"></i>
+                                        <i class="bi bi-lightning-fill text-figma-orange fs-6 icon-rotate"></i>
+                                    {% elseif abonnement.type == 'carnet' %}
+                                        <i class="bi bi-collection-fill text-figma-orange fs-6 icon-rotate"></i>
                                     {% elseif abonnement.type == 'hebdomadaire' %}
-                                        <i class="bi bi-calendar-week-fill text-figma-orange fs-5 icon-rotate"></i>
+                                        <i class="bi bi-calendar-week-fill text-figma-orange fs-6 icon-rotate"></i>
                                     {% elseif abonnement.type == 'mensuel' %}
-                                        <i class="bi bi-calendar-month-fill text-figma-orange fs-5 icon-rotate"></i>
+                                        <i class="bi bi-calendar-month-fill text-figma-orange fs-6 icon-rotate"></i>
                                     {% elseif abonnement.type == 'trimestriel' %}
-                                        <i class="bi bi-calendar-range-fill text-figma-orange fs-5 icon-rotate"></i>
+                                        <i class="bi bi-calendar-range-fill text-figma-orange fs-6 icon-rotate"></i>
                                     {% elseif abonnement.type == 'annuel' %}
-                                        <i class="bi bi-calendar-fill text-figma-orange fs-5 icon-rotate"></i>
+                                        <i class="bi bi-calendar-fill text-figma-orange fs-6 icon-rotate"></i>
                                     {% else %}
-                                        <i class="bi bi-trophy-fill text-figma-orange fs-5 icon-rotate"></i>
+                                        <i class="bi bi-trophy-fill text-figma-orange fs-6 icon-rotate"></i>
                                     {% endif %}
                                 </div>
-                                <h5 class="fw-bold mb-2 title-slide">{{ abonnement.nom }}</h5>
-                                <span class="badge bg-light text-dark border mb-2 badge-float">{{ abonnement.type|title }}</span>
+                                <h6 class="fw-bold mb-1 title-slide">{{ abonnement.nom }}</h6>
+                                <span class="badge bg-light text-dark border mb-1 badge-float" style="font-size: 0.7rem;">
+                                    {% if abonnement.type == 'seance' %}À l'unité
+                                    {% elseif abonnement.type == 'carnet' %}Carnet
+                                    {% else %}{{ abonnement.type|title }}
+                                    {% endif %}
+                                </span>
                                 {% if abonnement.description %}
-                                    <p class="text-muted small mb-0 description-fade">{{ abonnement.description|slice(0, 80) }}{% if abonnement.description|length > 80 %}...{% endif %}</p>
+                                    <p class="text-muted small mb-0 description-fade" style="font-size: 0.75rem;">{{ abonnement.description|slice(0, 60) }}{% if abonnement.description|length > 60 %}...{% endif %}</p>
                                 {% endif %}
                             </div>
 
-                            <div class="text-center mb-3">
-                                <div class="price-container h2 fw-bold text-figma-dark mb-0">
-                                    <span class="price-number">{{ abonnement.prix }}</span><span class="price-currency">€</span>
+                            <div class="text-center mb-2">
+                                <div class="price-container h5 fw-bold text-figma-dark mb-0">
+                                    <span class="price-number">{{ abonnement.prix }}</span><span class="price-currency" style="font-size: 0.8em;"> FCFA</span>
                                 </div>
-                                <small class="text-muted">
+                                <small class="text-muted" style="font-size: 0.75rem;">
                                     {% if abonnement.type == 'seance' %}
                                         /séance
+                                    {% elseif abonnement.type == 'carnet' %}
+                                        /carnet
                                     {% elseif abonnement.type == 'hebdomadaire' %}
                                         /semaine
                                     {% elseif abonnement.type == 'mensuel' %}
@@ -150,7 +175,7 @@
                                         /an
                                     {% endif %}
                                 </small>
-                                <div class="small text-muted mt-1">
+                                <div class="small text-muted mt-1" style="font-size: 0.7rem;">
                                     {% if abonnement.type == 'seance' %}
                                         Accès immédiat
                                     {% else %}
@@ -159,40 +184,28 @@
                                 </div>
                             </div>
 
-                            <div class="mb-4">
-                                <ul class="list-unstyled small mb-0 features-list">
+                            <div class="mb-3">
+                                <ul class="list-unstyled small mb-0 features-list" style="font-size: 0.75rem;">
                                     <li class="mb-1 feature-item" style="animation-delay: {{ delay + 100 }}ms;">
-                                        <i class="bi bi-check-circle-fill text-success me-2 check-bounce"></i>
+                                        <i class="bi bi-check-circle-fill text-success me-1 check-bounce" style="font-size: 0.7rem;"></i>
                                         {% if abonnement.type == 'seance' %}
-                                            Accès salle de sport
+                                            Accès salle (2h)
                                         {% else %}
-                                            Accès tous équipements
+                                            Accès complet
                                         {% endif %}
                                     </li>
                                     <li class="mb-1 feature-item" style="animation-delay: {{ delay + 200 }}ms;">
-                                        <i class="bi bi-check-circle-fill text-success me-2 check-bounce"></i>
+                                        <i class="bi bi-check-circle-fill text-success me-1 check-bounce" style="font-size: 0.7rem;"></i>
                                         {% if abonnement.type == 'seance' %}
-                                            Durée limitée (2h)
+                                            Équipements inclus
                                         {% else %}
-                                            Réservation cours collectifs
+                                            Cours collectifs
                                         {% endif %}
                                     </li>
-                                    {% if abonnement.type != 'seance' and abonnement.type != 'hebdomadaire' %}
+                                    {% if abonnement.type != 'seance' and abonnement.type != 'carnet' %}
                                         <li class="mb-1 feature-item" style="animation-delay: {{ delay + 300 }}ms;">
-                                            <i class="bi bi-check-circle-fill text-success me-2 check-bounce"></i>
-                                            Coaching personnalisé
-                                        </li>
-                                    {% endif %}
-                                    {% if abonnement.type == 'hebdomadaire' %}
-                                        <li class="mb-1 feature-item" style="animation-delay: {{ delay + 300 }}ms;">
-                                            <i class="bi bi-check-circle-fill text-success me-2 check-bounce"></i>
-                                            Accès 7 jours consécutifs
-                                        </li>
-                                    {% endif %}
-                                    {% if abonnement.type == 'annuel' %}
-                                        <li class="mb-1 feature-item" style="animation-delay: {{ delay + 400 }}ms;">
-                                            <i class="bi bi-check-circle-fill text-success me-2 check-bounce"></i>
-                                            Accès invité gratuit
+                                            <i class="bi bi-check-circle-fill text-success me-1 check-bounce" style="font-size: 0.7rem;"></i>
+                                            Coaching inclus
                                         </li>
                                     {% endif %}
                                 </ul>
@@ -200,21 +213,27 @@
 
                             <div class="d-grid mt-auto">
                                 {% if isAbonnementActuel %}
-                                    <button class="btn btn-success rounded-pill py-2 btn-current" disabled>
-                                        <i class="bi bi-check-circle me-1"></i>Abonnement actuel
+                                    <button class="btn btn-success rounded-pill py-1 btn-current" disabled style="font-size: 0.8rem;">
+                                        <i class="bi bi-check-circle me-1"></i>Actuel
                                     </button>
                                 {% else %}
-                                    <form method="post" action="{{ path('client_souscrire_abonnement', {'id': abonnement.id}) }}"
-                                          onsubmit="return confirm('Êtes-vous sûr de vouloir souscrire à cet abonnement pour {{ abonnement.prix }}€ ?')">
-                                        <button type="submit" class="btn btn-figma-yellow rounded-pill py-2 w-100 btn-subscribe">
-                                            <i class="bi bi-credit-card me-1"></i>
-                                            {% if abonnement.type == 'seance' %}
-                                                Acheter la séance
-                                            {% else %}
-                                                Souscrire
-                                            {% endif %}
-                                        </button>
-                                    </form>
+                                    <button type="button"
+                                            class="btn btn-figma-yellow rounded-pill py-1 w-100 btn-subscribe"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#confirmModal"
+                                            data-abonnement-id="{{ abonnement.id }}"
+                                            data-abonnement-nom="{{ abonnement.nom }}"
+                                            data-abonnement-prix="{{ abonnement.prix }}"
+                                            data-abonnement-type="{{ abonnement.type }}"
+                                            data-abonnement-description="{{ abonnement.description|slice(0, 120) }}"
+                                            style="font-size: 0.8rem;">
+                                        <i class="bi bi-credit-card me-1"></i>
+                                        {% if abonnement.type == 'seance' %}
+                                            Acheter
+                                        {% else %}
+                                            Souscrire
+                                        {% endif %}
+                                    </button>
                                 {% endif %}
                             </div>
                         </div>
@@ -222,10 +241,10 @@
                 {% endfor %}
             {% else %}
                 <div class="col-lg-8">
-                    <div class="bg-white rounded-3 shadow-sm p-5 text-center empty-state">
+                    <div class="bg-white rounded-3 shadow-sm p-4 text-center empty-state">
                         <i class="bi bi-card-text fs-1 text-muted mb-3 empty-icon"></i>
-                        <h5 class="text-muted mb-2">Aucun abonnement disponible</h5>
-                        <p class="text-muted">Les abonnements seront bientôt disponibles.</p>
+                        <h6 class="text-muted mb-2">Aucun abonnement disponible</h6>
+                        <p class="text-muted small">Les abonnements seront bientôt disponibles.</p>
                         <a href="{{ path('app_home') }}#contact" class="btn btn-figma-yellow rounded-pill btn-contact">
                             <i class="bi bi-envelope me-1"></i>Nous contacter
                         </a>
@@ -234,4 +253,123 @@
             {% endif %}
         </div>
     </div>
+
+    <!-- Modal de confirmation -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-figma-yellow border-0 text-center">
+                    <div class="w-100">
+                        <div class="text-center mb-2">
+                            <i class="bi bi-star-fill fs-3 text-figma-dark"></i>
+                        </div>
+                        <h5 class="modal-title fw-bold text-figma-dark" id="confirmModalLabel">
+                            Confirmer votre abonnement
+                        </h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="bg-figma-yellow bg-opacity-20 rounded-circle p-3 d-inline-flex mb-3">
+                            <i class="bi bi-credit-card-fill text-figma-orange fs-4"></i>
+                        </div>
+                        <h6 class="fw-bold mb-2">Vous êtes sur le point de souscrire à :</h6>
+                        <h4 class="text-figma-dark mb-2" id="modal-abonnement-nom">Nom de l'abonnement</h4>
+                        <span class="badge bg-light text-dark border mb-3" id="modal-abonnement-type">Type</span>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="bg-light rounded-3 p-3 text-center">
+                                <small class="text-muted d-block">Prix</small>
+                                <strong class="h5 mb-0 text-figma-dark">
+                                    <span id="modal-abonnement-prix">0</span> FCFA
+                                </strong>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light rounded-3 p-3 text-center">
+                                <small class="text-muted d-block">Activation</small>
+                                <strong class="text-success">Immédiate</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-light rounded-3 p-3 mb-4">
+                        <small class="text-muted d-block mb-1">Description :</small>
+                        <p class="mb-0 small" id="modal-abonnement-description">Description de l'abonnement</p>
+                    </div>
+
+                    <div class="alert alert-info border-0 bg-info bg-opacity-10">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <small>En confirmant, votre abonnement sera activé immédiatement et vous pourrez accéder à tous les services inclus.</small>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0">
+                    <div class="d-grid gap-2 w-100">
+                        <form id="confirmForm" method="post" action="">
+                            <button type="submit" class="btn btn-figma-yellow rounded-pill py-3 w-100 fw-bold">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Confirmer et payer <span id="modal-prix-final">0</span> FCFA
+                            </button>
+                        </form>
+                        <button type="button" class="btn btn-outline-secondary rounded-pill py-2" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-1"></i>Annuler
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const confirmModal = document.getElementById('confirmModal');
+            const confirmForm = document.getElementById('confirmForm');
+            const filterSelect = document.getElementById('filterAbonnements');
+
+            // Modal functionality
+            confirmModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+
+                const abonnementId = button.getAttribute('data-abonnement-id');
+                const abonnementNom = button.getAttribute('data-abonnement-nom');
+                const abonnementPrix = button.getAttribute('data-abonnement-prix');
+                const abonnementType = button.getAttribute('data-abonnement-type');
+                const abonnementDescription = button.getAttribute('data-abonnement-description');
+
+                document.getElementById('modal-abonnement-nom').textContent = abonnementNom;
+                document.getElementById('modal-abonnement-type').textContent = abonnementType.charAt(0).toUpperCase() + abonnementType.slice(1);
+                document.getElementById('modal-abonnement-prix').textContent = abonnementPrix;
+                document.getElementById('modal-prix-final').textContent = abonnementPrix;
+                document.getElementById('modal-abonnement-description').textContent = abonnementDescription || 'Abonnement complet avec accès à tous nos services.';
+
+                confirmForm.action = "{{ path('client_souscrire_abonnement', {'id': '__ID__'}) }}".replace('__ID__', abonnementId);
+            });
+
+            // Filter functionality
+            filterSelect.addEventListener('change', function() {
+                const selectedType = this.value;
+                const abonnementItems = document.querySelectorAll('.abonnement-item');
+
+                abonnementItems.forEach(function(item) {
+                    const itemType = item.getAttribute('data-type');
+
+                    if (selectedType === 'all' || itemType === selectedType) {
+                        item.style.display = 'block';
+                        // Add fade in animation
+                        item.style.opacity = '0';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                        }, 100);
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

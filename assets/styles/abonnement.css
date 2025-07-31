@@ -1,3 +1,4 @@
+
 /* Animations d'apparition des cartes */
 @keyframes slideInUp {
     from {
@@ -81,26 +82,28 @@
     }
 }
 
-/* Cercle parfait pour les icônes */
-.icon-container {
-    width: 60px !important;
-    height: 60px !important;
-    border-radius: 50% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    flex-shrink: 0 !important;
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
-/* Classes d'animation */
+/* Styles spécifiques pour les formules compactes */
 .abonnement-card {
     animation: slideInUp 0.6s ease-out forwards;
     transition: all 0.3s ease;
+    min-height: 280px;
+    max-height: 320px;
 }
 
 .abonnement-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
 .abonnement-card:hover .icon-container {
@@ -117,35 +120,35 @@
 }
 
 .icon-rotate:hover {
-    animation: rotate 0.6s ease-in-out;
-}
-
-.badge-float {
-    animation: bounce 2s infinite;
+    animation: rotate 0.5s ease-in-out;
 }
 
 .badge-bounce {
-    animation: bounce 1s ease-out;
+    animation: bounce 2s infinite;
 }
 
 .badge-glow {
-    animation: glow 2s infinite;
+    animation: glow 2s infinite ease-in-out;
 }
 
 .badge-shake {
     animation: shake 0.5s ease-in-out infinite;
 }
 
+.badge-float {
+    animation: fadeIn 0.8s ease-out;
+}
+
 .star-pulse {
     animation: pulse 1.5s infinite;
 }
 
-.price-bounce:hover {
-    animation: bounce 0.6s ease;
+.price-bounce {
+    animation: numberCount 0.5s ease-out;
 }
 
 .title-slide {
-    animation: slideInLeft 0.8s ease-out;
+    animation: slideInLeft 0.6s ease-out;
 }
 
 .description-fade {
@@ -153,41 +156,21 @@
 }
 
 .feature-item {
-    animation: slideInLeft 0.6s ease-out forwards;
-    opacity: 0;
-    animation-fill-mode: forwards;
+    animation: slideInLeft 0.6s ease-out;
 }
 
-.check-bounce:hover {
-    animation: bounce 0.4s ease;
-}
-
-.price-container:hover .price-number {
-    animation: numberCount 0.5s ease;
-    color: var(--bs-figma-orange);
-}
-
-.btn-subscribe {
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+.check-bounce {
+    animation: bounce 1s ease-out;
 }
 
 .btn-subscribe:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
-}
-
-.btn-subscribe:active {
-    transform: scale(0.95);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .btn-current {
-    animation: glow 2s infinite;
-}
-
-.btn-contact:hover {
-    animation: pulse 0.6s ease;
+    opacity: 0.8;
+    cursor: not-allowed;
 }
 
 .empty-state {
@@ -198,32 +181,50 @@
     animation: bounce 2s infinite;
 }
 
-/* Effet de hover sur les cartes */
-.abonnement-card:hover .price-container {
-    color: var(--bs-figma-orange) !important;
-    transition: color 0.3s ease;
+.btn-contact:hover {
+    transform: scale(1.05);
 }
 
-.abonnement-card:hover .badge-float {
-    animation-duration: 1s;
+/* Modal animations */
+.modal-content {
+    animation: modalSlideIn 0.3s ease-out;
 }
 
-/* Responsive animations */
+/* Responsive adjustments for compact cards */
 @media (max-width: 768px) {
     .abonnement-card {
-        animation-delay: 0ms !important;
+        min-height: 260px;
+        max-height: 300px;
     }
 
-    .feature-item {
-        animation-delay: 0ms !important;
+    .icon-container {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .price-container {
+        font-size: 1.3rem !important;
     }
 }
 
-/* Désactiver les animations pour les utilisateurs qui préfèrent moins de mouvement */
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+/* Filter transition */
+.abonnement-item {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Prix en FCFA styling */
+.price-currency {
+    font-weight: 600;
+    color: var(--figma-orange);
+}
+
+/* Compact features list */
+.features-list li {
+    line-height: 1.3;
+}
+
+/* Category badges */
+.badge-float {
+    font-size: 0.7rem !important;
+    padding: 0.25rem 0.5rem;
 }

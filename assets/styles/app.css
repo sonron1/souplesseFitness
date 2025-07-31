@@ -88,3 +88,55 @@ body, html, * {
     font-size: 13px;
     color: var(--figma-dark);
 }
+
+.abonnement-icon {
+    width: 80px;
+    height: 80px;
+}
+
+.contact-icon {
+    width: 70px;
+    height: 70px;
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+}
+
+.promotion-card {
+    border: 2px solid #ffd700 !important;
+}
+
+.shadow-hover:hover {
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+.backdrop-blur {
+    backdrop-filter: blur(10px);
+}
+
+.animate-slide-up {
+    animation: slideUp 1s ease-out;
+}
+
+.animate-fade-in {
+    animation: fadeIn 1.2s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

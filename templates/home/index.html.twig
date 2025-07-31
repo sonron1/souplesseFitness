@@ -69,150 +69,365 @@
                 <div class="container">
                     <h2 class="fw-bolder text-center mb-5 text-figma-dark display-5 animate-on-scroll" data-animate="fadeInDown">
                         <i class="bi bi-star-fill text-figma-yellow me-2"></i>
-                        Nos abonnements exclusifs
+                        Nos tarifs exclusifs
                     </h2>
 
-                    <div class="row g-4">
-                        {% for abonnement in abonnements %}
-                            <div class="col-lg-4 col-md-6">
-                                <div class="card h-100 border-0 shadow-sm rounded-4 position-relative animate-on-scroll" data-animate="zoomIn"
-                                     style="{% if abonnement.nom == 'Abonnement Forme' %}border: 3px solid #ffc107 !important;{% endif %}">
+                    <!-- Organisation des abonnements par catégories -->
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="accordion accordion-flush" id="abonnementsAccordion">
 
-                                    {% if abonnement.nom == 'Abonnement Forme' %}
-                                        <div class="position-absolute top-0 start-50 translate-middle">
-                                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold">
-                                                <i class="bi bi-star-fill me-1"></i>POPULAIRE
-                                            </span>
-                                        </div>
-                                    {% endif %}
+                                <!-- GROUPE 1: TARIFS SIMPLES -->
+                                <div class="accordion-item border-0 shadow-sm rounded-3 mb-3">
+                                    <h2 class="accordion-header" id="tarifsSimples">
+                                        <button class="accordion-button collapsed bg-white rounded-3 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSimples" aria-expanded="false" aria-controls="collapseSimples">
+                                            <i class="bi bi-person-fill text-figma-orange me-3 fs-4"></i>
+                                            <div class="d-flex justify-content-between align-items-center w-100">
+                                                <span class="text-figma-dark">Formules Individuelles</span>
+                                                <span class="badge bg-figma-yellow text-dark me-3">
+                                                    {% set simplesCount = 0 %}
+                                                    {% for abonnement in abonnements %}
+                                                        {% if 'couple' not in abonnement.type|lower and 'famille' not in abonnement.nom|lower %}
+                                                            {% set simplesCount = simplesCount + 1 %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {{ simplesCount }} formules
+                                                </span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseSimples" class="accordion-collapse collapse" aria-labelledby="tarifsSimples" data-bs-parent="#abonnementsAccordion">
+                                        <div class="accordion-body bg-light p-4">
+                                            <div class="row g-3">
+                                                {% for abonnement in abonnements %}
+                                                    {% if 'couple' not in abonnement.type|lower and 'famille' not in abonnement.nom|lower %}
+                                                        <div class="col-lg-4 col-md-6">
+                                                            <div class="card h-100 border-0 shadow-sm rounded-3 position-relative bg-white {% if abonnement.nom == 'Abonnement 1 Mois' %}border-warning border-2{% endif %}">
 
-                                    <div class="card-header bg-transparent border-0 text-center pt-4">
-                                        <h3 class="fw-bold text-figma-dark mb-2">{{ abonnement.nom }}</h3>
-                                        <div class="price-display mb-2">
-                                            <span class="display-4 fw-bold text-figma-orange">{{ abonnement.prix }}€</span>
-                                            <span class="text-muted fs-5">
-                                                /{% if abonnement.type == 'mensuel' %}mois{% else %}an{% endif %}
-                                            </span>
+                                                                {% if abonnement.nom == 'Abonnement 1 Mois' %}
+                                                                    <div class="position-absolute top-0 start-50 translate-middle">
+                                                                        <span class="badge bg-warning text-dark px-2 py-1 rounded-pill fw-bold small">
+                                                                            <i class="bi bi-star-fill me-1"></i>PROMO
+                                                                        </span>
+                                                                    </div>
+                                                                {% endif %}
+
+                                                                <div class="card-body text-center p-3">
+                                                                    <div class="mb-3">
+                                                                        {% if abonnement.type == 'seance' %}
+                                                                            <i class="bi bi-lightning-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% elseif abonnement.type == 'carnet' %}
+                                                                            <i class="bi bi-collection-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% elseif 'mensuel' in abonnement.type %}
+                                                                            <i class="bi bi-calendar-month-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% elseif abonnement.type == 'trimestriel' %}
+                                                                            <i class="bi bi-calendar-range-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% elseif abonnement.type == 'semestriel' %}
+                                                                            <i class="bi bi-calendar2-range-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% elseif abonnement.type == 'annuel' %}
+                                                                            <i class="bi bi-calendar-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% else %}
+                                                                            <i class="bi bi-trophy-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% endif %}
+                                                                    </div>
+
+                                                                    <h5 class="fw-bold text-figma-dark mb-2">{{ abonnement.nom }}</h5>
+
+                                                                    <div class="price-display mb-3">
+                                                                        <div class="h3 fw-bold text-figma-orange mb-0">{{ abonnement.prix }} <span class="small text-muted">FCFA</span></div>
+                                                                        <small class="text-muted">
+                                                                            /{% if abonnement.type == 'mensuel' or 'mensuel' in abonnement.type %}mois
+                                                                        {% elseif abonnement.type == 'trimestriel' %}3 mois
+                                                                        {% elseif abonnement.type == 'semestriel' %}6 mois
+                                                                        {% elseif abonnement.type == 'annuel' %}an
+                                                                        {% elseif abonnement.type == 'seance' %}séance
+                                                                        {% elseif abonnement.type == 'carnet' %}carnet
+                                                                        {% else %}période{% endif %}
+                                                                        </small>
+                                                                    </div>
+
+                                                                    <p class="small text-muted mb-3" style="min-height: 40px;">
+                                                                        {{ abonnement.description|slice(0, 60) }}{% if abonnement.description|length > 60 %}...{% endif %}
+                                                                    </p>
+
+                                                                    <div class="features-list mb-3 text-start">
+                                                                        {% if abonnement.type == 'seance' %}
+                                                                            <div class="d-flex align-items-center mb-1">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Accès salle (2h max)</small>
+                                                                            </div>
+                                                                        {% elseif abonnement.type == 'carnet' %}
+                                                                            <div class="d-flex align-items-center mb-1">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>{% if '10' in abonnement.nom %}10{% else %}15{% endif %} séances</small>
+                                                                            </div>
+                                                                        {% else %}
+                                                                            <div class="d-flex align-items-center mb-1">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Accès illimité 7j/7</small>
+                                                                            </div>
+                                                                            {% if 'plus' in abonnement.type %}
+                                                                                <div class="d-flex align-items-center mb-1">
+                                                                                    <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                    <small>Coaching personnalisé</small>
+                                                                                </div>
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                        <div class="d-flex align-items-center mb-1">
+                                                                            <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                            <small>Cours collectifs inclus</small>
+                                                                        </div>
+                                                                        <div class="d-flex align-items-center">
+                                                                            <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                            <small>Vestiaires & douches</small>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="d-grid">
+                                                                        <button class="btn {% if abonnement.nom == 'Abonnement 1 Mois' %}btn-warning{% else %}btn-figma-orange{% endif %} rounded-pill py-2 fw-bold">
+                                                                            <i class="bi bi-credit-card me-1"></i>
+                                                                            Choisir
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
                                         </div>
-                                        {% if abonnement.type == 'annuel' %}
-                                            <small class="text-success fw-bold">
-                                                <i class="bi bi-piggy-bank me-1"></i>Économisez 2 mois !
-                                            </small>
-                                        {% endif %}
                                     </div>
+                                </div>
 
-                                    <div class="card-body d-flex flex-column p-4">
-                                        <p class="text-muted mb-4">{{ abonnement.description }}</p>
-
-                                        <div class="features-list flex-grow-1 mb-4">
-                                            {% set avantages = {
-                                                'Abonnement Découverte': [
-                                                    'Accès libre 7j/7 de 6h à 22h',
-                                                    'Cours collectifs inclus',
-                                                    'Vestiaires et douches',
-                                                    'Programme d\'entraînement personnalisé',
-                                                    'Suivi des progrès en ligne'
-                                                ],
-                                                'Abonnement Forme': [
-                                                    'Tous les avantages Découverte',
-                                                    '2 séances de coaching personnalisé/mois',
-                                                    'Accès aux cours premium (Yoga, Pilates)',
-                                                    'Espace détente et sauna',
-                                                    'Nutrition coaching inclus',
-                                                    'Application mobile premium'
-                                                ],
-                                                'Abonnement Premium': [
-                                                    'Tous les avantages Forme',
-                                                    'Coaching personnalisé illimité',
-                                                    'Accès prioritaire aux équipements',
-                                                    'Vestiaire VIP privé',
-                                                    'Massages thérapeutiques (2/mois)',
-                                                    'Plan nutrition sur-mesure',
-                                                    'Invitations aux événements exclusifs'
-                                                ],
-                                                'Abonnement Étudiant': [
-                                                    'Accès libre en semaine 8h-17h',
-                                                    'Cours collectifs de base',
-                                                    'Vestiaires et douches',
-                                                    'Support en ligne',
-                                                    'Réductions sur les services'
-                                                ],
-                                                'Abonnement Annuel': [
-                                                    'Équivalent Forme pour 12 mois',
-                                                    '2 mois offerts (10 mois payés)',
-                                                    '4 séances coaching personnalisé/mois',
-                                                    'Accès invité (2 fois/mois)',
-                                                    'Garantie satisfaction 30 jours',
-                                                    'Gel d\'abonnement (1 mois/an)'
-                                                ],
-                                                'Abonnement Famille': [
-                                                    'Accès pour 4 personnes maximum',
-                                                    'Tous les cours collectifs inclus',
-                                                    'Cours enfants/ados spécialisés',
-                                                    'Vestiaires familiaux',
-                                                    'Activités famille mensuelles',
-                                                    'Réductions boutique et café'
-                                                ]
-                                            } %}
-
-                                            {% for avantage in avantages[abonnement.nom] %}
-                                                <div class="d-flex align-items-start mb-2">
-                                                    <i class="bi bi-check-circle-fill text-success me-2 mt-1 flex-shrink-0"></i>
-                                                    <small class="text-figma-dark">{{ avantage }}</small>
-                                                </div>
+                                <!-- GROUPE 2: TARIFS COUPLE -->
+                                <div class="accordion-item border-0 shadow-sm rounded-3 mb-3">
+                                    <h2 class="accordion-header" id="tarifsCouple">
+                                        <button class="accordion-button collapsed bg-white rounded-3 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCouple" aria-expanded="false" aria-controls="collapseCouple">
+                                            <i class="bi bi-people-fill text-figma-orange me-3 fs-4"></i>
+                                            <div class="d-flex justify-content-between align-items-center w-100">
+                                                <span class="text-figma-dark">Formules Couple & Famille</span>
+                                                <span class="badge bg-figma-yellow text-dark me-3">
+                                                    {% set coupleCount = 0 %}
+                                                    {% for abonnement in abonnements %}
+                                                        {% if 'couple' in abonnement.type|lower or 'famille' in abonnement.nom|lower %}
+                                                            {% set coupleCount = coupleCount + 1 %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {{ coupleCount }} formules
+                                                </span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseCouple" class="accordion-collapse collapse" aria-labelledby="tarifsCouple" data-bs-parent="#abonnementsAccordion">
+                                        <div class="accordion-body bg-light p-4">
+                                            {% set coupleAbonnements = [] %}
+                                            {% for abonnement in abonnements %}
+                                                {% if 'couple' in abonnement.type|lower or 'famille' in abonnement.nom|lower %}
+                                                    {% set coupleAbonnements = coupleAbonnements|merge([abonnement]) %}
+                                                {% endif %}
                                             {% endfor %}
-                                        </div>
 
-                                        <div class="mt-auto">
-                                            <button class="btn {% if abonnement.nom == 'Abonnement Forme' %}btn-warning{% else %}btn-figma-orange{% endif %} w-100 rounded-pill py-3 fw-bold mb-2">
-                                                <i class="bi bi-credit-card me-2"></i>
-                                                Choisir cet abonnement
-                                            </button>
-                                            <small class="d-block text-center text-muted">
-                                                <i class="bi bi-shield-check me-1"></i>
-                                                Sans engagement • Résiliation facile
-                                            </small>
+                                            {% if coupleAbonnements|length > 0 %}
+                                                <div class="row g-3">
+                                                    {% for abonnement in coupleAbonnements %}
+                                                        <div class="col-lg-6">
+                                                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
+                                                                <div class="card-body text-center p-4">
+                                                                    <div class="mb-3">
+                                                                        <i class="bi bi-hearts text-figma-orange fs-1 mb-2"></i>
+                                                                    </div>
+
+                                                                    <h5 class="fw-bold text-figma-dark mb-2">{{ abonnement.nom }}</h5>
+
+                                                                    <div class="price-display mb-3">
+                                                                        <div class="h3 fw-bold text-figma-orange mb-0">{{ abonnement.prix }} <span class="small text-muted">FCFA</span></div>
+                                                                        <small class="text-muted">
+                                                                            /{% if 'mensuel' in abonnement.type %}mois
+                                                                        {% elseif 'trimestriel' in abonnement.type %}3 mois
+                                                                        {% elseif 'semestriel' in abonnement.type %}6 mois
+                                                                        {% elseif 'annuel' in abonnement.type %}an
+                                                                        {% else %}période{% endif %} (pour 2)
+                                                                        </small>
+                                                                    </div>
+
+                                                                    <p class="small text-muted mb-3" style="min-height: 40px;">
+                                                                        {{ abonnement.description|slice(0, 80) }}{% if abonnement.description|length > 80 %}...{% endif %}
+                                                                    </p>
+
+                                                                    <div class="features-list mb-3 text-start">
+                                                                        <div class="d-flex align-items-center mb-1">
+                                                                            <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                            <small>Accès pour 2 personnes</small>
+                                                                        </div>
+                                                                        <div class="d-flex align-items-center mb-1">
+                                                                            <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                            <small>Cours collectifs inclus</small>
+                                                                        </div>
+                                                                        {% if 'plus' in abonnement.type %}
+                                                                            <div class="d-flex align-items-center mb-1">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Coaching couple personnalisé</small>
+                                                                            </div>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Plans nutrition individualisés</small>
+                                                                            </div>
+                                                                        {% else %}
+                                                                            <div class="d-flex align-items-center mb-1">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Séances duo possibles</small>
+                                                                            </div>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Motivation partagée</small>
+                                                                            </div>
+                                                                        {% endif %}
+                                                                    </div>
+
+                                                                    <div class="d-grid">
+                                                                        <button class="btn btn-figma-orange rounded-pill py-2 fw-bold">
+                                                                            <i class="bi bi-heart-fill me-1"></i>
+                                                                            Choisir Couple
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <div class="text-center py-4">
+                                                    <i class="bi bi-info-circle text-muted fs-1 mb-3"></i>
+                                                    <h5 class="text-muted">Formules couple bientôt disponibles</h5>
+                                                    <p class="text-muted mb-0">Contactez-nous pour être informé de leur lancement</p>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- GROUPE 3: ACTIVITÉS SPÉCIALES -->
+                                <div class="accordion-item border-0 shadow-sm rounded-3 mb-3">
+                                    <h2 class="accordion-header" id="activitesSpeciales">
+                                        <button class="accordion-button collapsed bg-white rounded-3 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpeciales" aria-expanded="false" aria-controls="collapseSpeciales">
+                                            <i class="bi bi-trophy-fill text-figma-orange me-3 fs-4"></i>
+                                            <div class="d-flex justify-content-between align-items-center w-100">
+                                                <span class="text-figma-dark">Activités Spéciales & Coaching</span>
+                                                <span class="badge bg-figma-yellow text-dark me-3">
+                                                    {% set specialCount = 0 %}
+                                                    {% for abonnement in abonnements %}
+                                                        {% if abonnement.type == 'activite_speciale' %}
+                                                            {% set specialCount = specialCount + 1 %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {{ specialCount + 3 }} services
+                                                </span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseSpeciales" class="accordion-collapse collapse" aria-labelledby="activitesSpeciales" data-bs-parent="#abonnementsAccordion">
+                                        <div class="accordion-body bg-light p-4">
+                                            <div class="row g-3">
+                                                <!-- Fit Dance depuis les fixtures -->
+                                                {% for abonnement in abonnements %}
+                                                    {% if abonnement.type == 'activite_speciale' %}
+                                                        <div class="col-lg-3 col-md-6">
+                                                            <div class="card border-0 shadow-sm rounded-3 text-center p-3 bg-white">
+                                                                <i class="bi bi-music-note-beamed text-success fs-1 mb-3"></i>
+                                                                <h6 class="fw-bold mb-2">{{ abonnement.nom }}</h6>
+                                                                <p class="small text-muted mb-2">{{ abonnement.description|slice(0, 50) }}...</p>
+                                                                <div class="h5 fw-bold text-figma-orange mb-3">{{ abonnement.prix }} <span class="small">FCFA</span></div>
+                                                                <button class="btn btn-outline-success btn-sm rounded-pill">
+                                                                    <i class="bi bi-music-note me-1"></i>Réserver
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                                <!-- Activités fixes -->
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="card border-0 shadow-sm rounded-3 text-center p-3 bg-white">
+                                                        <i class="bi bi-heart-pulse-fill text-danger fs-1 mb-3"></i>
+                                                        <h6 class="fw-bold mb-2">Cours de Cardio</h6>
+                                                        <p class="small text-muted mb-2">Sessions intensives de cardio</p>
+                                                        <div class="h5 fw-bold text-figma-orange mb-3">2,500 <span class="small">FCFA</span></div>
+                                                        <button class="btn btn-outline-danger btn-sm rounded-pill">
+                                                            <i class="bi bi-heart-pulse me-1"></i>Réserver
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="card border-0 shadow-sm rounded-3 text-center p-3 bg-white">
+                                                        <i class="bi bi-peace-fill text-info fs-1 mb-3"></i>
+                                                        <h6 class="fw-bold mb-2">Yoga & Pilates</h6>
+                                                        <p class="small text-muted mb-2">Détente et souplesse</p>
+                                                        <div class="h5 fw-bold text-figma-orange mb-3">3,000 <span class="small">FCFA</span></div>
+                                                        <button class="btn btn-outline-info btn-sm rounded-pill">
+                                                            <i class="bi bi-peace me-1"></i>Réserver
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="card border-0 shadow-sm rounded-3 text-center p-3 bg-white">
+                                                        <i class="bi bi-award-fill text-warning fs-1 mb-3"></i>
+                                                        <h6 class="fw-bold mb-2">Coaching Personnel</h6>
+                                                        <p class="small text-muted mb-2">Suivi individualisé complet</p>
+                                                        <div class="h5 fw-bold text-figma-orange mb-3">8,000 <span class="small">FCFA</span></div>
+                                                        <button class="btn btn-outline-warning btn-sm rounded-pill">
+                                                            <i class="bi bi-award me-1"></i>Réserver
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        {% endfor %}
-                    </div>
 
-                    <!-- Garanties et sécurité -->
-                    <div class="row mt-5">
-                        <div class="col-12">
-                            <div class="bg-white p-4 rounded-4 shadow-sm">
-                                <div class="row text-center">
-                                    <div class="col-md-3 mb-3">
-                                        <i class="bi bi-shield-check display-6 text-success mb-2"></i>
-                                        <h6 class="fw-bold text-figma-dark">Paiement sécurisé</h6>
-                                        <small class="text-muted">SSL et encryption bancaire</small>
+                            <!-- Garanties et sécurité -->
+                            <div class="mt-4">
+                                <div class="bg-white p-4 rounded-3 shadow-sm">
+                                    <div class="row text-center">
+                                        <div class="col-md-3 mb-3">
+                                            <i class="bi bi-shield-check display-6 text-success mb-2"></i>
+                                            <h6 class="fw-bold text-figma-dark">Paiement sécurisé</h6>
+                                            <small class="text-muted">Transactions protégées</small>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <i class="bi bi-arrow-clockwise display-6 text-info mb-2"></i>
+                                            <h6 class="fw-bold text-figma-dark">Sans engagement</h6>
+                                            <small class="text-muted">Annulation libre</small>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <i class="bi bi-headset display-6 text-warning mb-2"></i>
+                                            <h6 class="fw-bold text-figma-dark">Support 24/7</h6>
+                                            <small class="text-muted">Assistance continue</small>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <i class="bi bi-heart-fill display-6 text-danger mb-2"></i>
+                                            <h6 class="fw-bold text-figma-dark">Satisfaction garantie</h6>
+                                            <small class="text-muted">Résultats assurés</small>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3 mb-3">
-                                        <i class="bi bi-arrow-clockwise display-6 text-info mb-2"></i>
-                                        <h6 class="fw-bold text-figma-dark">Sans engagement</h6>
-                                        <small class="text-muted">Résiliez quand vous voulez</small>
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <i class="bi bi-headset display-6 text-warning mb-2"></i>
-                                        <h6 class="fw-bold text-figma-dark">Support 24/7</h6>
-                                        <small class="text-muted">Équipe dédiée à votre service</small>
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <i class="bi bi-heart-fill display-6 text-danger mb-2"></i>
-                                        <h6 class="fw-bold text-figma-dark">Satisfaction garantie</h6>
-                                        <small class="text-muted">30 jours satisfait ou remboursé</small>
-                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CTA finale -->
+                            <div class="text-center mt-4">
+                                <div class="bg-gradient p-4 rounded-3" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                                    <h5 class="text-white mb-2 fw-bold">
+                                        <i class="bi bi-gift-fill me-2"></i>Offre découverte
+                                    </h5>
+                                    <p class="text-white mb-3">Essai gratuit sur demande pour tous nos nouveaux membres !</p>
+                                    <a href="#contact" class="btn btn-light btn-lg rounded-pill px-5 fw-bold shadow">
+                                        <i class="bi bi-arrow-right-circle me-2"></i>En profiter maintenant
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <span class="badge bg-figma-yellow text-figma-dark px-3 py-2 shadow-sm">
-                            Offre découverte&nbsp;: <strong>Essai gratuit sur demande&nbsp;!</strong> <a href="#contact" class="text-figma-dark text-decoration-underline ms-2">En profiter</a>
-                        </span>
                     </div>
                 </div>
             </section>
@@ -225,7 +440,7 @@
                             <div class="bg-white rounded-4 shadow-sm p-5 animate-on-scroll" data-animate="zoomIn">
                                 <i class="bi bi-lock-fill display-4 text-figma-yellow mb-4"></i>
                                 <h2 class="fw-bold text-figma-dark mb-3 display-6">
-                                    Découvrez nos abonnements exclusifs
+                                    Découvrez nos tarifs exclusifs
                                 </h2>
                                 <p class="lead text-muted mb-4">
                                     Créez votre compte gratuit pour accéder à nos formules d'abonnement

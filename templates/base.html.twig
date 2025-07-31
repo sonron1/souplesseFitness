@@ -5,8 +5,8 @@
     <title>{% block title %}Souplesse Fitness - Salle de sport moderne{% endblock %}</title>
     <link rel="icon" href="{{ asset('images/favicon.ico') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{% block meta_description %}Souplesse Fitness - Votre salle de sport moderne à Paris. Musculation, cardio, cours collectifs, coaching personnalisé. Rejoignez-nous !{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}salle de sport, fitness, musculation, cardio, coaching, Paris, abonnement gym{% endblock %}">
+    <meta name="description" content="{% block meta_description %}Souplesse Fitness - Votre salle de sport moderne au Bénin. Musculation, cardio, cours collectifs, coaching personnalisé. Face Clôture Iita, Cotonou.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}salle de sport, fitness, musculation, cardio, coaching, Cotonou, Bénin, abonnement gym, fit dance, taekwondo, boxe{% endblock %}">
 
     {# Open Graph pour les réseaux sociaux #}
     <meta property="og:title" content="{% block og_title %}{{ block('title') }}{% endblock %}">
@@ -98,28 +98,27 @@
                                         <li><a class="dropdown-item" href="{{ path('coach_planning') }}"><i class="bi bi-calendar me-2"></i>Mon Planning</a></li>
                                         <li><a class="dropdown-item" href="{{ path('coach_clients') }}"><i class="bi bi-people me-2"></i>Mes Clients</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ path('app_home') }}"><i class="bi bi-house me-2"></i>Accueil</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_home') }}"><i class="bi bi-house me-2"></i>Retour au site</a></li>
                                     {% elseif is_granted('ROLE_CLIENT') %}
                                         {# Menu Client #}
-                                        <li><a class="dropdown-item" href="{{ path('client_dashboard') }}"><i class="bi bi-speedometer2 me-2"></i>Mon Espace Client</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('client_profil') }}"><i class="bi bi-person me-2"></i>Mon Profil</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('client_reservations') }}"><i class="bi bi-calendar me-2"></i>Mes Réservations</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('client_dashboard') }}"><i class="bi bi-speedometer2 me-2"></i>Mon Dashboard</a></li>
                                         <li><a class="dropdown-item" href="{{ path('client_abonnements') }}"><i class="bi bi-card-checklist me-2"></i>Mes Abonnements</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('client_reservations') }}"><i class="bi bi-calendar-event me-2"></i>Réservations</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('client_profil') }}"><i class="bi bi-person-gear me-2"></i>Mon Profil</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ path('app_home') }}"><i class="bi bi-house me-2"></i>Accueil</a></li>
-                                    {% else %}
-                                        {# Menu utilisateur de base #}
-                                        <li><a class="dropdown-item" href="{{ path('app_home') }}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Mon profil</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_home') }}"><i class="bi bi-house me-2"></i>Retour au site</a></li>
                                     {% endif %}
-                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-right me-2"></i>Déconnexion</a></li>
                                 </ul>
                             </div>
                         {% else %}
-                            {# Utilisateur non connecté #}
-                            <a href="{{ path('app_login') }}" class="btn btn-figma-outline-dark rounded-pill px-4 py-2">Connexion</a>
-                            <a href="{{ path('app_register') }}" class="btn btn-figma-yellow rounded-pill px-4 py-2">Inscription</a>
+                            {# Visiteur non connecté #}
+                            <a href="{{ path('app_login') }}" class="btn btn-outline-dark rounded-pill px-4 py-2">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>Se connecter
+                            </a>
+                            <a href="{{ path('app_register') }}" class="btn btn-figma-yellow rounded-pill px-4 py-2">
+                                <i class="bi bi-person-plus me-1"></i>S'inscrire
+                            </a>
                         {% endif %}
                     </div>
                 </div>
@@ -128,65 +127,109 @@
     {% endif %}
 {% endblock %}
 
-{# Contenu principal de chaque page #}
-{% block body %}{% endblock %}
+{# Contenu principal #}
+<main>
+    {% block body %}{% endblock %}
+</main>
 
 {# Footer - peut être surchargé #}
 {% block footer %}
     {% if block('show_footer') is not defined or block('show_footer') %}
-        <footer class="border-top py-4 bg-light mt-5">
+        <footer class="bg-figma-dark text-light py-5 mt-5">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center gap-2 mb-3">
-                            <img src="{{ asset('images/logo.jpg') }}" alt="Souplesse Fitness" class="rounded-circle border" style="height:32px;width:32px;object-fit:cover;">
-                            <strong class="text-figma-dark">Souplesse Fitness</strong>
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{{ asset('images/logo.jpg') }}" alt="Souplesse Fitness" class="rounded-circle me-3" style="height:50px;width:50px;object-fit:cover;">
+                            <h5 class="mb-0 text-figma-yellow fw-bold">Souplesse Fitness</h5>
                         </div>
-                        <p class="text-figma-dark small mb-2">
-                            <i class="bi bi-geo-alt-fill me-1"></i> 123 rue Fitness, 75000 Paris
+                        <p class="text-light opacity-75 mb-3">
+                            Votre salle de sport moderne au Bénin.
+                            <strong class="text-figma-yellow">STABILITÉ - PROGRÈS - RÉUSSITE</strong>
                         </p>
-                        <p class="text-figma-dark small mb-2">
-                            <i class="bi bi-telephone me-1"></i> 01 23 45 67 89
-                        </p>
-                        <p class="text-figma-dark small">
-                            <i class="bi bi-envelope me-1"></i> contact@souplesse-fitness.fr
-                        </p>
+                        <div class="d-flex gap-3">
+                            <a href="#" class="text-figma-yellow fs-5"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="text-figma-yellow fs-5"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="text-figma-yellow fs-5"><i class="bi bi-youtube"></i></a>
+                            <a href="#" class="text-figma-yellow fs-5"><i class="bi bi-tiktok"></i></a>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <h6 class="text-figma-dark fw-bold mb-3">Liens rapides</h6>
-                        <div class="row">
-                            <div class="col-6">
-                                <ul class="list-unstyled small">
-                                    {% if app.user %}
-                                        <li><a href="{{ path('app_home') }}#abonnements" class="text-figma-dark text-decoration-none">Abonnements</a></li>
-                                        <li><a href="{{ path('app_home') }}#boutique" class="text-figma-dark text-decoration-none">Boutique</a></li>
-                                    {% endif %}
-                                    <li><a href="{{ path('app_home') }}#contact" class="text-figma-dark text-decoration-none">Contact</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-6">
-                                <ul class="list-unstyled small">
-                                    <li><a href="#" class="text-figma-dark text-decoration-none">Mentions légales</a></li>
-                                    <li><a href="#" class="text-figma-dark text-decoration-none">CGV</a></li>
-                                    <li><a href="#" class="text-figma-dark text-decoration-none">Politique de confidentialité</a></li>
-                                </ul>
-                            </div>
+
+                    <div class="col-lg-3">
+                        <h6 class="text-figma-yellow fw-bold mb-3">🕒 Nos Horaires</h6>
+                        <ul class="list-unstyled text-light opacity-75">
+                            <li class="mb-2">
+                                <strong>Lundi au Vendredi :</strong><br>
+                                <i class="bi bi-clock me-1 text-figma-yellow"></i>7h - 22h
+                            </li>
+                            <li class="mb-2">
+                                <strong>Samedi :</strong><br>
+                                <i class="bi bi-clock me-1 text-figma-yellow"></i>7h - 20h
+                            </li>
+                            <li class="mb-2">
+                                <strong>Dimanche & Jours fériés :</strong><br>
+                                <i class="bi bi-clock me-1 text-figma-yellow"></i>7h - 14h
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <h6 class="text-figma-yellow fw-bold mb-3">Navigation</h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="{{ path('app_home') }}" class="text-light opacity-75 text-decoration-none hover-yellow">Accueil</a></li>
+                            <li class="mb-2"><a href="{{ path('app_home') }}#abonnements" class="text-light opacity-75 text-decoration-none hover-yellow">Abonnements</a></li>
+                            <li class="mb-2"><a href="{{ path('app_home') }}#contact" class="text-light opacity-75 text-decoration-none hover-yellow">Contact</a></li>
+                            {% if not app.user %}
+                                <li class="mb-2"><a href="{{ path('app_register') }}" class="text-light opacity-75 text-decoration-none hover-yellow">S'inscrire</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <h6 class="text-figma-yellow fw-bold mb-3">📞 Contact</h6>
+                        <ul class="list-unstyled text-light opacity-75">
+                            <li class="mb-2">
+                                <i class="bi bi-telephone-fill me-2 text-figma-yellow"></i>
+                                <a href="tel:+22901961136" class="text-light text-decoration-none">+229 01 96 11 61 36</a>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-telephone-fill me-2 text-figma-yellow"></i>
+                                <a href="tel:+22901967735" class="text-light text-decoration-none">+229 01 96 77 35 09</a>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-envelope-fill me-2 text-figma-yellow"></i>
+                                <a href="mailto:souplessefitness@hotmail.fr" class="text-light text-decoration-none">souplessefitness@hotmail.fr</a>
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-geo-alt-fill me-2 text-figma-yellow"></i>
+                                Face Clôture Iita au bord des pavés<br>
+                                <small>En quittant le Carrefour Iita pour le Carrefour Tankpè</small>
+                            </li>
+                        </ul>
+
+                        <div class="bg-figma-yellow bg-opacity-10 p-3 rounded-3 border border-figma-yellow border-opacity-25">
+                            <h6 class="text-figma-yellow mb-2">👕 DRESS CODE</h6>
+                            <ul class="list-unstyled small text-light opacity-75 mb-0">
+                                <li>✓ Tenue de Sport</li>
+                                <li>✓ Chaussures de Sport</li>
+                                <li>✓ Serviette Obligatoire</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <hr class="my-4">
+
+                <hr class="border-figma-yellow border-opacity-25 my-4">
+
                 <div class="row align-items-center">
                     <div class="col-md-6">
-                        <p class="text-figma-dark small mb-0">
-                            &copy; {{ "now"|date("Y") }} Souplesse Fitness. Tous droits réservés.
+                        <p class="mb-0 text-light opacity-50 small">
+                            © {{ 'now'|date('Y') }} Souplesse Fitness. Tous droits réservés.
                         </p>
                     </div>
                     <div class="col-md-6 text-md-end">
-                        <div class="mb-3">
-                            <a href="{{ path('app_home') }}#contact" class="btn btn-figma-yellow btn-sm rounded-pill shadow-sm fw-bold px-4" style="letter-spacing:0.5px;">
-                                <i class="bi bi-arrow-right-circle me-1"></i> Séance d'essai gratuite
-                            </a>
-                        </div>
+                        <p class="mb-0 text-figma-yellow fw-bold">
+                            STABILITÉ - PROGRÈS - RÉUSSITE
+                        </p>
                     </div>
                 </div>
             </div>
@@ -198,37 +241,14 @@
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
 {% endblock %}
-
-{# JavaScript additionnel spécifique à chaque page #}
+{# JS additionnels spécifiques à chaque page #}
 {% block extra_javascripts %}{% endblock %}
 
-<!-- Bouton de retour en haut -->
-<button id="backToTop" class="btn btn-figma-yellow rounded-circle position-fixed shadow" style="bottom: 20px; right: 20px; z-index: 1000; display: none; width: 50px; height: 50px;">
-    <i class="bi bi-arrow-up"></i>
-</button>
-
-<script>
-    // Script pour le bouton "Retour en haut"
-    document.addEventListener('DOMContentLoaded', function() {
-        const backToTopButton = document.getElementById('backToTop');
-
-        // Afficher/masquer le bouton selon le scroll
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 300) {
-                backToTopButton.style.display = 'block';
-            } else {
-                backToTopButton.style.display = 'none';
-            }
-        });
-
-        // Action de retour en haut
-        backToTopButton.addEventListener('click', function() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-    });
-</script>
+<style>
+    .hover-yellow:hover {
+        color: var(--figma-yellow) !important;
+        transition: color 0.3s ease;
+    }
+</style>
 </body>
 </html>
