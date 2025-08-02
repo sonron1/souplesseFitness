@@ -1,0 +1,177 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Vue d'ensemble de l'administration{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <!-- Statistiques -->
+        <div class="col-md-3 mb-4">
+            <div class="card stat-card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 class="mb-0">{{ stats.total_users }}</h3>
+                            <p class="mb-0">Utilisateurs</p>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card stat-card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 class="mb-0">{{ stats.total_clients }}</h3>
+                            <p class="mb-0">Clients</p>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="bi bi-person-heart"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card stat-card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 class="mb-0">{{ stats.total_coaches }}</h3>
+                            <p class="mb-0">Coachs</p>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="bi bi-person-badge"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card stat-card bg-danger text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 class="mb-0">{{ stats.total_admins }}</h3>
+                            <p class="mb-0">Admins</p>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Membres récents -->
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-person-plus me-2"></i>Nouveaux membres</h5>
+                    <a href="{{ path('admin_users_list') }}" class="btn btn-sm btn-outline-primary">Voir tout</a>
+                </div>
+                <div class="card-body">
+                    {% if stats.recent_members %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Rôle</th>
+                                    <th>Inscription</th>
+                                    <th>Statut</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in stats.recent_members %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar me-3">
+                                                    <i class="bi bi-person-circle fs-4 text-muted"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">{{ user.fullName }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ user.email }}</td>
+                                        <td>
+                                            <span class="badge {{ user.roleBadgeClass }}">{{ user.mainRole }}</span>
+                                        </td>
+                                        <td>{{ user.createdAt|date('d/m/Y') }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ user.isActive ? 'success' : 'secondary' }}">
+                                                {{ user.isActive ? 'Actif' : 'Inactif' }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted text-center py-4">Aucun nouveau membre</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions rapides -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>Actions rapides</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('admin_user_create') }}" class="btn btn-primary">
+                            <i class="bi bi-person-plus"></i> Créer un utilisateur
+                        </a>
+                        <a href="#" class="btn btn-success">
+                            <i class="bi bi-person-heart"></i> Nouveau client
+                        </a>
+                        <a href="#" class="btn btn-warning text-white">
+                            <i class="bi bi-person-badge"></i> Nouveau coach
+                        </a>
+                        <a href="#" class="btn btn-info text-white">
+                            <i class="bi bi-calendar-event"></i> Créer un cours
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statut système -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Statut système</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Utilisateurs actifs</span>
+                        <span class="badge bg-success">{{ stats.active_users }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Utilisateurs inactifs</span>
+                        <span class="badge bg-secondary">{{ stats.inactive_users }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Serveur</span>
+                        <span class="badge bg-success">En ligne</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

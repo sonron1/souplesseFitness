@@ -1,0 +1,329 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription - Souplesse Fitness{% endblock %}
+
+{% block body %}
+
+    <!-- HERO ANIMÉ -->
+    <header class="hero-animated py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 text-center">
+                    <h1 class="display-5 fw-bold text-figma-dark mb-3 hero-title">
+                        <i class="bi bi-person-plus-fill me-2 floating-icon"></i>Rejoignez-nous
+                    </h1>
+                    <p class="lead text-figma-dark mb-0 hero-subtitle">
+                        Créez votre compte et commencez votre transformation dès aujourd'hui
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- FORMULAIRE D'INSCRIPTION -->
+    <main class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <!-- Messages flash -->
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                            <i class="bi bi-check-circle me-2"></i>{{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    {% for flash_error in app.flashes('verify_email_error') %}
+                        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>{{ flash_error }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    <!-- Formulaire par étapes -->
+                    <div class="card border-0 shadow-lg" style="border-radius: 2rem;">
+                        <div class="card-body p-5">
+                            <!-- Indicateur d'étapes -->
+                            <div class="step-indicator">
+                                <div class="step-line">
+                                    <div class="step-line-progress" id="progressBar"></div>
+                                </div>
+                                <div class="step active" data-step="1">1</div>
+                                <div class="step" data-step="2">2</div>
+                                <div class="step" data-step="3">3</div>
+                                <div class="step" data-step="4">4</div>
+                                <div class="step" data-step="5">5</div>
+                            </div>
+
+                            {{ form_start(registrationForm, {'attr': {'id': 'registrationForm', 'novalidate': 'novalidate'}}) }}
+
+                            <!-- ÉTAPE 1 Identité -->
+                            <div class="step-content active" data-step="1">
+                                <h3 class="text-center mb-4 text-figma-dark">
+                                    <i class="bi bi-person-fill text-figma-yellow me-2"></i>
+                                    Identité
+                                </h3>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating-custom">
+                                            {{ form_widget(registrationForm.firstName, {
+                                                'attr': { 'placeholder': ' ', 'class': 'form-control form-control-lg' }
+                                            }) }}
+                                            <label><i class="bi bi-person me-1"></i>Prénom</label>
+                                            {{ form_errors(registrationForm.firstName) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating-custom">
+                                            {{ form_widget(registrationForm.lastName, {
+                                                'attr': { 'placeholder': ' ', 'class': 'form-control form-control-lg' }
+                                            }) }}
+                                            <label><i class="bi bi-person me-1"></i>Nom</label>
+                                            {{ form_errors(registrationForm.lastName) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-floating-custom">
+                                    {{ form_widget(registrationForm.email, {
+                                        'attr': { 'placeholder': ' ', 'class': 'form-control form-control-lg' }
+                                    }) }}
+                                    <label><i class="bi bi-envelope me-1"></i>Email</label>
+                                    {{ form_errors(registrationForm.email) }}
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-next btn-animated">
+                                        Suivant <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ÉTAPE 2 Coordonnées -->
+                            <div class="step-content" data-step="2">
+                                <h3 class="text-center mb-4 text-figma-dark">
+                                    <i class="bi bi-geo-alt text-figma-yellow me-2"></i>
+                                    Coordonnées
+                                </h3>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating-custom">
+                                            {{ form_widget(registrationForm.phone, {
+                                                'attr': { 'placeholder': ' ', 'class': 'form-control form-control-lg' }
+                                            }) }}
+                                            <label><i class="bi bi-telephone me-1"></i>Téléphone</label>
+                                            {{ form_errors(registrationForm.phone) }}
+                                            <div class="form-hint">Format: 10 chiffres (ex: 9612345678)</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating-custom">
+                                            {{ form_widget(registrationForm.birthDate, {
+                                                'attr': { 'placeholder': ' ', 'class': 'form-control form-control-lg' }
+                                            }) }}
+                                            <label><i class="bi bi-calendar me-1"></i>Date de naissance</label>
+                                            {{ form_errors(registrationForm.birthDate) }}
+                                            <div class="form-hint">Vous devez être âgé d'au moins 18 ans</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-floating-custom">
+                                    {{ form_widget(registrationForm.address, {
+                                        'attr': { 'placeholder': ' ', 'class': 'form-control form-control-lg' }
+                                    }) }}
+                                    <label><i class="bi bi-house me-1"></i>Adresse</label>
+                                    {{ form_errors(registrationForm.address) }}
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating-custom">
+                                            {{ form_widget(registrationForm.city, {
+                                                'attr': { 'placeholder': ' ', 'class': 'form-control form-control-lg' }
+                                            }) }}
+                                            <label><i class="bi bi-building me-1"></i>Ville</label>
+                                            {{ form_errors(registrationForm.city) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating-custom">
+                                            {{ form_widget(registrationForm.gender, {
+                                                'attr': { 'class': 'form-select form-select-lg custom-select' }
+                                            }) }}
+                                            <label><i class="bi bi-gender-ambiguous me-1"></i>Genre</label>
+                                            {{ form_errors(registrationForm.gender) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-prev btn-animated me-3">
+                                        <i class="bi bi-arrow-left me-2"></i>Précédent
+                                    </button>
+                                    <button type="button" class="btn btn-next btn-animated">
+                                        Suivant <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ÉTAPE 3: Profil fitness -->
+                            <div class="step-content" data-step="3">
+                                <h3 class="text-center mb-4 text-figma-dark">
+                                    <i class="bi bi-heart-pulse text-figma-yellow me-2"></i>
+                                    Profil fitness
+                                </h3>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating-custom">
+                                            {{ form_widget(registrationForm.fitnessGoals, {
+                                                'attr': { 'class': 'form-select form-select-lg custom-select' }
+                                            }) }}
+                                            <label><i class="bi bi-trophy me-1"></i>Objectifs fitness</label>
+                                            {{ form_errors(registrationForm.fitnessGoals) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating-custom">
+                                            {{ form_widget(registrationForm.experienceLevel, {
+                                                'attr': { 'class': 'form-select form-select-lg custom-select' }
+                                            }) }}
+                                            <label><i class="bi bi-bar-chart me-1"></i>Niveau d'expérience</label>
+                                            {{ form_errors(registrationForm.experienceLevel) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-floating-custom">
+                                    {{ form_widget(registrationForm.medicalConditions, {
+                                        'attr': { 'placeholder': ' ', 'class': 'form-control', 'rows': '4' }
+                                    }) }}
+                                    <label><i class="bi bi-file-medical me-1"></i>Conditions médicales</label>
+                                    {{ form_errors(registrationForm.medicalConditions) }}
+                                    <div class="form-hint medical-info">
+                                        <strong><i class="bi bi-info-circle me-1"></i>Informations importantes pour votre sécurité :</strong><br>
+                                        <p>• Blessures récentes ou chroniques (dos, genoux, épaules, etc.)<br>
+                                            • Problèmes cardiovasculaires ou respiratoires<br>
+                                            • Diabète, hypertension ou autres maladies chroniques<br>
+                                            • Allergies médicamenteuses ou alimentaires<br>
+                                            • Chirurgies récentes ou prothèses<br>
+                                            • Traitement médicamenteux en cours<br>
+                                            • Grossesse ou allaitement<br>
+                                            • Toute autre condition nécessitant une attention particulière<br></p>
+                                        <small class="text-muted">Ces informations resteront confidentielles et aideront nos coachs à vous accompagner en toute sécurité.</small>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-prev btn-animated me-3">
+                                        <i class="bi bi-arrow-left me-2"></i>Précédent
+                                    </button>
+                                    <button type="button" class="btn btn-next btn-animated">
+                                        Suivant <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ÉTAPE 4 Contact d'urgence -->
+                            <div class="step-content" data-step="4">
+                                <h3 class="text-center mb-4 text-figma-dark">
+                                    <i class="bi bi-person-heart text-figma-yellow me-2"></i>
+                                    Contact d'urgence
+                                </h3>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating-custom">
+                                            {{ form_widget(registrationForm.emergencyContact, {
+                                                'attr': { 'placeholder': ' ', 'class': 'form-control form-control-lg' }
+                                            }) }}
+                                            <label><i class="bi bi-person-heart me-1"></i>Contact d'urgence</label>
+                                            {{ form_errors(registrationForm.emergencyContact) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating-custom">
+                                            {{ form_widget(registrationForm.emergencyPhone, {
+                                                'attr': { 'placeholder': ' ', 'class': 'form-control form-control-lg' }
+                                            }) }}
+                                            <label><i class="bi bi-telephone-forward me-1"></i>Téléphone d'urgence</label>
+                                            {{ form_errors(registrationForm.emergencyPhone) }}
+                                            <div class="form-hint">Format: 10 chiffres commençant par 01 (Ex : 0112345678)</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-floating-custom">
+                                    {{ form_widget(registrationForm.plainPassword, {
+                                        'attr': { 'placeholder': ' ', 'class': 'form-control form-control-lg', 'id': 'password' }
+                                    }) }}
+                                    <label><i class="bi bi-lock me-1"></i>Mot de passe</label>
+                                    {{ form_errors(registrationForm.plainPassword) }}
+                                </div>
+
+                                <div class="form-floating-custom">
+                                    {{ form_widget(registrationForm.confirmPassword, {
+                                        'attr': { 'placeholder': ' ', 'class': 'form-control form-control-lg', 'id': 'confirmPassword' }
+                                    }) }}
+                                    <label><i class="bi bi-lock-fill me-1"></i>Confirmer le mot de passe</label>
+                                    {{ form_errors(registrationForm.confirmPassword) }}
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-prev btn-animated me-3">
+                                        <i class="bi bi-arrow-left me-2"></i>Précédent
+                                    </button>
+                                    <button type="button" class="btn btn-next btn-animated">
+                                        Suivant <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- ÉTAPE 5: Confirmation -->
+                            <div class="step-content" data-step="5">
+                                <h3 class="text-center mb-4 text-figma-dark">
+                                    <i class="bi bi-check-circle text-figma-yellow me-2"></i>
+                                    Confirmation
+                                </h3>
+
+                                <div class="form-check mb-4">
+                                    {{ form_widget(registrationForm.agreeTerms, {
+                                        'attr': { 'class': 'form-check-input' }
+                                    }) }}
+                                    <label class="form-check-label">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        J'accepte les <a href="#" class="text-figma-yellow">conditions d'utilisation</a>
+                                    </label>
+                                    {{ form_errors(registrationForm.agreeTerms) }}
+                                </div>
+
+                                <div class="form-check mb-4">
+                                    {{ form_widget(registrationForm.subscribeNewsletter, {
+                                        'attr': { 'class': 'form-check-input' }
+                                    }) }}
+                                    <label class="form-check-label">
+                                        <i class="bi bi-envelope-paper me-1"></i>Je souhaite recevoir la newsletter
+                                    </label>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-prev btn-animated me-3">
+                                        <i class="bi bi-arrow-left me-2"></i>Précédent
+                                    </button>
+                                    <button type="submit" class="btn btn-submit btn-animated">
+                                        <i class="bi bi-check-circle me-2"></i>Créer mon compte
+                                    </button>
+                                </div>
+                            </div>
+
+                            {{ form_end(registrationForm) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

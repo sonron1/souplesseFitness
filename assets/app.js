@@ -1,10 +1,21 @@
-import './bootstrap.js';
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
+// Import des styles CSS
 import './styles/app.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+// Import de Bootstrap CSS et JS
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap';
+
+// Import des icônes Bootstrap
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
+// Import d'Animate.css pour les animations
+import 'animate.css';
+
+// Import des scripts personnalisés
+import './js/register';
+import './js/custom';
+import './js/admin';
+import './js/abonnement'
+
+// Import du bootstrap Stimulus
+import './bootstrap';

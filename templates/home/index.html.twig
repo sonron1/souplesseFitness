@@ -1,20 +1,649 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% extends 'base.html.twig' %}
+{% block title %}Souplesse Fitness - Salle de sport moderne à votre rythme{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <!-- HERO -->
+    <header>
+        <div class="bg-figma-dark position-relative overflow-hidden" style="height: 400px; max-height: 55vw;">
+            <img src=" {{ asset('images/banner.jpg') }}" alt="Salle de sport" class="w-100 h-100 object-fit-cover" loading="eager" style="opacity:0.68; object-fit: cover;">
+            <div class="position-absolute top-0 start-0 w-100 h-100 bg-figma-dark" style="opacity:0.66;"></div>
+            <div class="container position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center text-center z-1">
+                <h1 class="display-3 fw-bold text-figma-yellow mb-3 text-shadow animate__animated animate__fadeInDown">
+                    Atteignez votre <span class="text-white">meilleure forme</span>
+                </h1>
+                <p class="lead text-light mb-4 animate__animated animate__fadeIn animate__delay-1s">
+                    Espace, coaching, liberté — entraînez-vous selon vos envies&nbsp;!
+                </p>
+                {% if app.user %}
+                    <a href="#abonnements" class="btn btn-figma-yellow btn-lg rounded-pill shadow px-5 fw-bold animate__animated animate__pulse animate__delay-2s animate__infinite">
+                        Découvrir nos abonnements
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_register') }}" class="btn btn-figma-yellow btn-lg rounded-pill shadow px-5 fw-bold animate__animated animate__pulse animate__delay-2s animate__infinite">
+                        Rejoignez-nous maintenant
+                    </a>
+                {% endif %}
+                <div class="mt-3">
+                    <a href="#contact" class="link-light text-decoration-underline small">Demandez une séance d'essai gratuite <i class="bi bi-arrow-right-circle"></i></a>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <main>
+        <!-- Présentation -->
+        <section class="bg-white section-space animate-on-scroll" data-animate="fadeInLeft">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-md-6">
+                        <img src="{{ asset('images/pexelsvictorfreitas.jpg') }}" alt="Salle de sport musculation"
+                             class="w-100 rounded-4 shadow object-fit-cover animate-on-scroll"
+                             style="max-height:340px; object-fit: cover;"
+                             data-animate="zoomIn"/>
+                    </div>
+                    <div class="col-md-6 px-md-5">
+                        <h2 class="fw-bold mb-4 text-figma-yellow display-6 animate-on-scroll" data-animate="fadeInUp">Votre gym, votre tempo</h2>
+                        <p class="mb-4 text-figma-dark fw-normal animate-on-scroll" data-animate="fadeIn" style="font-size:1.12rem;">
+                            Cardio, musculation, cours collectifs, conseils&nbsp;: vivez une expérience sportive humaine et flexible. Accès 7j/7, équipe professionnelle et ambiance chaleureuse.
+                        </p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2 d-flex align-items-center animate-on-scroll" data-animate="fadeInRight"><i class="bi bi-patch-check-fill text-success me-2"></i> Coachs diplômés et motivants</li>
+                            <li class="mb-2 d-flex align-items-center animate-on-scroll" data-animate="fadeInRight"><i class="bi bi-calendar2-check-fill text-success me-2"></i> Réservation des cours en ligne</li>
+                            <li class="mb-2 d-flex align-items-center animate-on-scroll" data-animate="fadeInRight"><i class="bi bi-emoji-smile-fill text-success me-2"></i> Ambiance conviviale, zéro intimidation</li>
+                            <li class="mb-2 d-flex align-items-center animate-on-scroll" data-animate="fadeInRight"><i class="bi bi-bag-heart-fill text-success me-2"></i> Boutique fitness & boissons</li>
+                        </ul>
+                        {% if app.user %}
+                            <a href="#abonnements" class="btn btn-figma-outline-dark rounded-pill px-5 py-2 animate-on-scroll" data-animate="fadeInUp">Voir nos abonnements</a>
+                        {% else %}
+                            <a href="#contact" class="btn btn-figma-outline-dark rounded-pill px-5 py-2 animate-on-scroll" data-animate="fadeInUp">Nous contacter</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/Ange/PhpstormProjects/souplesseFitness/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>C:/Users/Ange/PhpstormProjects/souplesseFitness/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
+        {% if app.user %}
+            <!-- SECTION ABONNEMENTS - UNIQUEMENT POUR LES UTILISATEURS CONNECTÉS -->
+            <section id="abonnements" class="section-space bg-light">
+                <div class="container">
+                    <h2 class="fw-bolder text-center mb-5 text-figma-dark display-5 animate-on-scroll" data-animate="fadeInDown">
+                        <i class="bi bi-star-fill text-figma-yellow me-2"></i>
+                        Nos tarifs exclusifs
+                    </h2>
+
+                    <!-- Organisation des abonnements par catégories -->
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="accordion accordion-flush" id="abonnementsAccordion">
+
+                                <!-- GROUPE 1: TARIFS SIMPLES -->
+                                <div class="accordion-item border-0 shadow-sm rounded-3 mb-3">
+                                    <h2 class="accordion-header" id="tarifsSimples">
+                                        <button class="accordion-button collapsed bg-white rounded-3 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSimples" aria-expanded="false" aria-controls="collapseSimples">
+                                            <i class="bi bi-person-fill text-figma-orange me-3 fs-4"></i>
+                                            <div class="d-flex justify-content-between align-items-center w-100">
+                                                <span class="text-figma-dark">Formules Individuelles</span>
+                                                <span class="badge bg-figma-yellow text-dark me-3">
+                                                    {% set simplesCount = 0 %}
+                                                    {% for abonnement in abonnements %}
+                                                        {% if 'couple' not in abonnement.type|lower and 'famille' not in abonnement.nom|lower %}
+                                                            {% set simplesCount = simplesCount + 1 %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {{ simplesCount }} formules
+                                                </span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseSimples" class="accordion-collapse collapse" aria-labelledby="tarifsSimples" data-bs-parent="#abonnementsAccordion">
+                                        <div class="accordion-body bg-light p-4">
+                                            <div class="row g-3">
+                                                {% for abonnement in abonnements %}
+                                                    {% if 'couple' not in abonnement.type|lower and 'famille' not in abonnement.nom|lower %}
+                                                        <div class="col-lg-4 col-md-6">
+                                                            <div class="card h-100 border-0 shadow-sm rounded-3 position-relative bg-white {% if abonnement.nom == 'Abonnement 1 Mois' %}border-warning border-2{% endif %}">
+
+                                                                {% if abonnement.nom == 'Abonnement 1 Mois' %}
+                                                                    <div class="position-absolute top-0 start-50 translate-middle">
+                                                                        <span class="badge bg-warning text-dark px-2 py-1 rounded-pill fw-bold small">
+                                                                            <i class="bi bi-star-fill me-1"></i>PROMO
+                                                                        </span>
+                                                                    </div>
+                                                                {% endif %}
+
+                                                                <div class="card-body text-center p-3">
+                                                                    <div class="mb-3">
+                                                                        {% if abonnement.type == 'seance' %}
+                                                                            <i class="bi bi-lightning-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% elseif abonnement.type == 'carnet' %}
+                                                                            <i class="bi bi-collection-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% elseif 'mensuel' in abonnement.type %}
+                                                                            <i class="bi bi-calendar-month-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% elseif abonnement.type == 'trimestriel' %}
+                                                                            <i class="bi bi-calendar-range-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% elseif abonnement.type == 'semestriel' %}
+                                                                            <i class="bi bi-calendar2-range-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% elseif abonnement.type == 'annuel' %}
+                                                                            <i class="bi bi-calendar-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% else %}
+                                                                            <i class="bi bi-trophy-fill text-figma-orange fs-1 mb-2"></i>
+                                                                        {% endif %}
+                                                                    </div>
+
+                                                                    <h5 class="fw-bold text-figma-dark mb-2">{{ abonnement.nom }}</h5>
+
+                                                                    <div class="price-display mb-3">
+                                                                        <div class="h3 fw-bold text-figma-orange mb-0">{{ abonnement.prix }} <span class="small text-muted">FCFA</span></div>
+                                                                        <small class="text-muted">
+                                                                            /{% if abonnement.type == 'mensuel' or 'mensuel' in abonnement.type %}mois
+                                                                        {% elseif abonnement.type == 'trimestriel' %}3 mois
+                                                                        {% elseif abonnement.type == 'semestriel' %}6 mois
+                                                                        {% elseif abonnement.type == 'annuel' %}an
+                                                                        {% elseif abonnement.type == 'seance' %}séance
+                                                                        {% elseif abonnement.type == 'carnet' %}carnet
+                                                                        {% else %}période{% endif %}
+                                                                        </small>
+                                                                    </div>
+
+                                                                    <p class="small text-muted mb-3" style="min-height: 40px;">
+                                                                        {{ abonnement.description|slice(0, 60) }}{% if abonnement.description|length > 60 %}...{% endif %}
+                                                                    </p>
+
+                                                                    <div class="features-list mb-3 text-start">
+                                                                        {% if abonnement.type == 'seance' %}
+                                                                            <div class="d-flex align-items-center mb-1">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Accès salle (2h max)</small>
+                                                                            </div>
+                                                                        {% elseif abonnement.type == 'carnet' %}
+                                                                            <div class="d-flex align-items-center mb-1">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>{% if '10' in abonnement.nom %}10{% else %}15{% endif %} séances</small>
+                                                                            </div>
+                                                                        {% else %}
+                                                                            <div class="d-flex align-items-center mb-1">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Accès illimité 7j/7</small>
+                                                                            </div>
+                                                                            {% if 'plus' in abonnement.type %}
+                                                                                <div class="d-flex align-items-center mb-1">
+                                                                                    <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                    <small>Coaching personnalisé</small>
+                                                                                </div>
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                        <div class="d-flex align-items-center mb-1">
+                                                                            <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                            <small>Cours collectifs inclus</small>
+                                                                        </div>
+                                                                        <div class="d-flex align-items-center">
+                                                                            <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                            <small>Vestiaires & douches</small>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="d-grid">
+                                                                        <button class="btn {% if abonnement.nom == 'Abonnement 1 Mois' %}btn-warning{% else %}btn-figma-orange{% endif %} rounded-pill py-2 fw-bold">
+                                                                            <i class="bi bi-credit-card me-1"></i>
+                                                                            Choisir
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- GROUPE 2: TARIFS COUPLE -->
+                                <div class="accordion-item border-0 shadow-sm rounded-3 mb-3">
+                                    <h2 class="accordion-header" id="tarifsCouple">
+                                        <button class="accordion-button collapsed bg-white rounded-3 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCouple" aria-expanded="false" aria-controls="collapseCouple">
+                                            <i class="bi bi-people-fill text-figma-orange me-3 fs-4"></i>
+                                            <div class="d-flex justify-content-between align-items-center w-100">
+                                                <span class="text-figma-dark">Formules Couple & Famille</span>
+                                                <span class="badge bg-figma-yellow text-dark me-3">
+                                                    {% set coupleCount = 0 %}
+                                                    {% for abonnement in abonnements %}
+                                                        {% if 'couple' in abonnement.type|lower or 'famille' in abonnement.nom|lower %}
+                                                            {% set coupleCount = coupleCount + 1 %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {{ coupleCount }} formules
+                                                </span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseCouple" class="accordion-collapse collapse" aria-labelledby="tarifsCouple" data-bs-parent="#abonnementsAccordion">
+                                        <div class="accordion-body bg-light p-4">
+                                            {% set coupleAbonnements = [] %}
+                                            {% for abonnement in abonnements %}
+                                                {% if 'couple' in abonnement.type|lower or 'famille' in abonnement.nom|lower %}
+                                                    {% set coupleAbonnements = coupleAbonnements|merge([abonnement]) %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if coupleAbonnements|length > 0 %}
+                                                <div class="row g-3">
+                                                    {% for abonnement in coupleAbonnements %}
+                                                        <div class="col-lg-6">
+                                                            <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
+                                                                <div class="card-body text-center p-4">
+                                                                    <div class="mb-3">
+                                                                        <i class="bi bi-hearts text-figma-orange fs-1 mb-2"></i>
+                                                                    </div>
+
+                                                                    <h5 class="fw-bold text-figma-dark mb-2">{{ abonnement.nom }}</h5>
+
+                                                                    <div class="price-display mb-3">
+                                                                        <div class="h3 fw-bold text-figma-orange mb-0">{{ abonnement.prix }} <span class="small text-muted">FCFA</span></div>
+                                                                        <small class="text-muted">
+                                                                            /{% if 'mensuel' in abonnement.type %}mois
+                                                                        {% elseif 'trimestriel' in abonnement.type %}3 mois
+                                                                        {% elseif 'semestriel' in abonnement.type %}6 mois
+                                                                        {% elseif 'annuel' in abonnement.type %}an
+                                                                        {% else %}période{% endif %} (pour 2)
+                                                                        </small>
+                                                                    </div>
+
+                                                                    <p class="small text-muted mb-3" style="min-height: 40px;">
+                                                                        {{ abonnement.description|slice(0, 80) }}{% if abonnement.description|length > 80 %}...{% endif %}
+                                                                    </p>
+
+                                                                    <div class="features-list mb-3 text-start">
+                                                                        <div class="d-flex align-items-center mb-1">
+                                                                            <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                            <small>Accès pour 2 personnes</small>
+                                                                        </div>
+                                                                        <div class="d-flex align-items-center mb-1">
+                                                                            <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                            <small>Cours collectifs inclus</small>
+                                                                        </div>
+                                                                        {% if 'plus' in abonnement.type %}
+                                                                            <div class="d-flex align-items-center mb-1">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Coaching couple personnalisé</small>
+                                                                            </div>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Plans nutrition individualisés</small>
+                                                                            </div>
+                                                                        {% else %}
+                                                                            <div class="d-flex align-items-center mb-1">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Séances duo possibles</small>
+                                                                            </div>
+                                                                            <div class="d-flex align-items-center">
+                                                                                <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 0.8rem;"></i>
+                                                                                <small>Motivation partagée</small>
+                                                                            </div>
+                                                                        {% endif %}
+                                                                    </div>
+
+                                                                    <div class="d-grid">
+                                                                        <button class="btn btn-figma-orange rounded-pill py-2 fw-bold">
+                                                                            <i class="bi bi-heart-fill me-1"></i>
+                                                                            Choisir Couple
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <div class="text-center py-4">
+                                                    <i class="bi bi-info-circle text-muted fs-1 mb-3"></i>
+                                                    <h5 class="text-muted">Formules couple bientôt disponibles</h5>
+                                                    <p class="text-muted mb-0">Contactez-nous pour être informé de leur lancement</p>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- GROUPE 3: ACTIVITÉS SPÉCIALES -->
+                                <div class="accordion-item border-0 shadow-sm rounded-3 mb-3">
+                                    <h2 class="accordion-header" id="activitesSpeciales">
+                                        <button class="accordion-button collapsed bg-white rounded-3 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpeciales" aria-expanded="false" aria-controls="collapseSpeciales">
+                                            <i class="bi bi-trophy-fill text-figma-orange me-3 fs-4"></i>
+                                            <div class="d-flex justify-content-between align-items-center w-100">
+                                                <span class="text-figma-dark">Activités Spéciales & Coaching</span>
+                                                <span class="badge bg-figma-yellow text-dark me-3">
+                                                    {% set specialCount = 0 %}
+                                                    {% for abonnement in abonnements %}
+                                                        {% if abonnement.type == 'activite_speciale' %}
+                                                            {% set specialCount = specialCount + 1 %}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {{ specialCount + 3 }} services
+                                                </span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseSpeciales" class="accordion-collapse collapse" aria-labelledby="activitesSpeciales" data-bs-parent="#abonnementsAccordion">
+                                        <div class="accordion-body bg-light p-4">
+                                            <div class="row g-3">
+                                                <!-- Fit Dance depuis les fixtures -->
+                                                {% for abonnement in abonnements %}
+                                                    {% if abonnement.type == 'activite_speciale' %}
+                                                        <div class="col-lg-3 col-md-6">
+                                                            <div class="card border-0 shadow-sm rounded-3 text-center p-3 bg-white">
+                                                                <i class="bi bi-music-note-beamed text-success fs-1 mb-3"></i>
+                                                                <h6 class="fw-bold mb-2">{{ abonnement.nom }}</h6>
+                                                                <p class="small text-muted mb-2">{{ abonnement.description|slice(0, 50) }}...</p>
+                                                                <div class="h5 fw-bold text-figma-orange mb-3">{{ abonnement.prix }} <span class="small">FCFA</span></div>
+                                                                <button class="btn btn-outline-success btn-sm rounded-pill">
+                                                                    <i class="bi bi-music-note me-1"></i>Réserver
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                                <!-- Activités fixes -->
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="card border-0 shadow-sm rounded-3 text-center p-3 bg-white">
+                                                        <i class="bi bi-heart-pulse-fill text-danger fs-1 mb-3"></i>
+                                                        <h6 class="fw-bold mb-2">Cours de Cardio</h6>
+                                                        <p class="small text-muted mb-2">Sessions intensives de cardio</p>
+                                                        <div class="h5 fw-bold text-figma-orange mb-3">2,500 <span class="small">FCFA</span></div>
+                                                        <button class="btn btn-outline-danger btn-sm rounded-pill">
+                                                            <i class="bi bi-heart-pulse me-1"></i>Réserver
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="card border-0 shadow-sm rounded-3 text-center p-3 bg-white">
+                                                        <i class="bi bi-peace-fill text-info fs-1 mb-3"></i>
+                                                        <h6 class="fw-bold mb-2">Yoga & Pilates</h6>
+                                                        <p class="small text-muted mb-2">Détente et souplesse</p>
+                                                        <div class="h5 fw-bold text-figma-orange mb-3">3,000 <span class="small">FCFA</span></div>
+                                                        <button class="btn btn-outline-info btn-sm rounded-pill">
+                                                            <i class="bi bi-peace me-1"></i>Réserver
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-3 col-md-6">
+                                                    <div class="card border-0 shadow-sm rounded-3 text-center p-3 bg-white">
+                                                        <i class="bi bi-award-fill text-warning fs-1 mb-3"></i>
+                                                        <h6 class="fw-bold mb-2">Coaching Personnel</h6>
+                                                        <p class="small text-muted mb-2">Suivi individualisé complet</p>
+                                                        <div class="h5 fw-bold text-figma-orange mb-3">8,000 <span class="small">FCFA</span></div>
+                                                        <button class="btn btn-outline-warning btn-sm rounded-pill">
+                                                            <i class="bi bi-award me-1"></i>Réserver
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Garanties et sécurité -->
+                            <div class="mt-4">
+                                <div class="bg-white p-4 rounded-3 shadow-sm">
+                                    <div class="row text-center">
+                                        <div class="col-md-3 mb-3">
+                                            <i class="bi bi-shield-check display-6 text-success mb-2"></i>
+                                            <h6 class="fw-bold text-figma-dark">Paiement sécurisé</h6>
+                                            <small class="text-muted">Transactions protégées</small>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <i class="bi bi-arrow-clockwise display-6 text-info mb-2"></i>
+                                            <h6 class="fw-bold text-figma-dark">Sans engagement</h6>
+                                            <small class="text-muted">Annulation libre</small>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <i class="bi bi-headset display-6 text-warning mb-2"></i>
+                                            <h6 class="fw-bold text-figma-dark">Support 24/7</h6>
+                                            <small class="text-muted">Assistance continue</small>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <i class="bi bi-heart-fill display-6 text-danger mb-2"></i>
+                                            <h6 class="fw-bold text-figma-dark">Satisfaction garantie</h6>
+                                            <small class="text-muted">Résultats assurés</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CTA finale -->
+                            <div class="text-center mt-4">
+                                <div class="bg-gradient p-4 rounded-3" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                                    <h5 class="text-white mb-2 fw-bold">
+                                        <i class="bi bi-gift-fill me-2"></i>Offre découverte
+                                    </h5>
+                                    <p class="text-white mb-3">Essai gratuit sur demande pour tous nos nouveaux membres !</p>
+                                    <a href="#contact" class="btn btn-light btn-lg rounded-pill px-5 fw-bold shadow">
+                                        <i class="bi bi-arrow-right-circle me-2"></i>En profiter maintenant
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% else %}
+            <!-- SECTION CALL-TO-ACTION POUR LES VISITEURS NON CONNECTÉS -->
+            <section class="section-space bg-light">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8 text-center">
+                            <div class="bg-white rounded-4 shadow-sm p-5 animate-on-scroll" data-animate="zoomIn">
+                                <i class="bi bi-lock-fill display-4 text-figma-yellow mb-4"></i>
+                                <h2 class="fw-bold text-figma-dark mb-3 display-6">
+                                    Découvrez nos tarifs exclusifs
+                                </h2>
+                                <p class="lead text-muted mb-4">
+                                    Créez votre compte gratuit pour accéder à nos formules d'abonnement
+                                    et découvrir tous nos services premium.
+                                </p>
+                                <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
+                                    <a href="{{ path('app_register') }}" class="btn btn-figma-orange btn-lg rounded-pill px-5 py-3 fw-bold">
+                                        <i class="bi bi-person-plus me-2"></i>Créer un compte gratuit
+                                    </a>
+                                    <a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-lg rounded-pill px-5 py-3">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
+                                    </a>
+                                </div>
+                                <div class="mt-4 d-flex justify-content-center flex-wrap gap-4">
+                                    <div class="text-center">
+                                        <i class="bi bi-lightning-charge-fill text-figma-orange fs-3"></i>
+                                        <p class="small text-muted mb-0">Accès immédiat</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <i class="bi bi-shield-check-fill text-success fs-3"></i>
+                                        <p class="small text-muted mb-0">100% gratuit</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <i class="bi bi-heart-fill text-danger fs-3"></i>
+                                        <p class="small text-muted mb-0">Sans engagement</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+
+        <!-- Boutique -->
+        <section id="boutique" class="section-space animate-on-scroll" data-animate="fadeInRight" style="background: linear-gradient(90deg, #fff 65%, #FFF8E0 100%);">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-md-6 order-md-2 animate-on-scroll" data-animate="zoomIn">
+                        <img src="{{ asset('images/pexels-mastercowley.jpg') }}" alt="Boutique Fitness" class="w-100 rounded-4 shadow object-fit-cover" style="max-height:260px; object-fit: cover;">
+                    </div>
+                    <div class="col-md-6 order-md-1 px-md-5">
+                        <h2 class="fw-bold text-figma-yellow mb-3 display-6 animate-on-scroll" data-animate="fadeInUp">Boutique sur place</h2>
+                        <p class="mb-4 text-figma-dark animate-on-scroll" data-animate="fadeIn" style="font-size:1.08rem;">
+                            Complétez vos efforts avec nos accessoires et boissons exclusives, réservés à nos membres.
+                        </p>
+                        <a href="#contact" class="btn btn-figma-outline-dark px-5 py-2 rounded-pill animate-on-scroll" data-animate="fadeInUp">Demander un catalogue</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Témoignages -->
+        <section id="temoignages" class="bg-light section-space">
+            <div class="container">
+                <h2 class="fw-bolder text-center mb-4 text-figma-dark display-5 animate-on-scroll" data-animate="fadeInDown">Ils parlent de nous</h2>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm h-100 bg-white text-center p-4 animate-on-scroll" data-animate="zoomIn" style="border-radius: 1.4rem;">
+                            <img src="{{ asset('images/edgar-chaparro.jpg') }}" alt="avis client" class="rounded-circle mx-auto mb-3 border border-3 border-figma-yellow" style="width: 74px; height: 74px; object-fit: cover;">
+                            <blockquote class="blockquote mb-0">
+                                <p class="fst-italic text-figma-dark">«Salle très conviviale et équipements au top. Les coachs sont à l'écoute ! »</p>
+                                <footer class="blockquote-footer text-figma-dark">Laura B.</footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm h-100 bg-white text-center p-4 animate-on-scroll" data-animate="zoomIn" style="border-radius: 1.4rem;">
+                            <img src="{{ asset('images/madison-lavern.jpg') }}" alt="avis client" class="rounded-circle mx-auto mb-3 border border-3 border-figma-yellow" style="width: 74px; height: 74px; object-fit: cover;">
+                            <blockquote class="blockquote mb-0">
+                                <p class="fst-italic text-figma-dark">«J'ai enfin trouvé une salle où je me sens bien. Bonne ambiance, propre et beaucoup de matériel ! »</p>
+                                <footer class="blockquote-footer text-figma-dark">Thomas D.</footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm h-100 bg-white text-center p-4 animate-on-scroll" data-animate="zoomIn" style="border-radius: 1.4rem;">
+                            <img src="{{ asset('images/pexels-nappy.jpg') }}" alt="avis client" class="rounded-circle mx-auto mb-3 border border-3 border-figma-yellow" style="width: 74px; height: 74px; object-fit: cover;">
+                            <blockquote class="blockquote mb-0">
+                                <p class="fst-italic text-figma-dark">«Les programmes sont adaptés et l'accueil, au top. Je recommande à tous les niveaux. »</p>
+                                <footer class="blockquote-footer text-figma-dark">Sarah K.</footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ courte -->
+        <section class="section-space bg-white">
+            <div class="container">
+                <h2 class="fw-bold text-center text-figma-dark mb-4">Questions fréquentes</h2>
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="q1">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                                Peut-on visiter la salle avant de s'inscrire?
+                            </button>
+                        </h2>
+                        <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="q1" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Oui, contactez-nous pour programmer une visite ou bénéficier de notre séance d'essai gratuite.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="q2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                                Les abonnements incluent-ils un coaching personnalisé?
+                            </button>
+                        </h2>
+                        <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="q2" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Certains abonnements incluent un coaching personnalisé et tous permettent un suivi sur demande.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" class="section-space bg-figma-yellow">
+            <div class="container">
+                <h2 class="fw-bolder text-center text-figma-dark mb-4 mb-md-5 display-6">Contactez-nous</h2>
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success text-center">{{ message }}</div>
+                {% endfor %}
+                <div class="row justify-content-center">
+                    <div class="col-md-7 col-lg-6">
+                        {{ form_start(form, {
+                            attr: {
+                                class: 'bg-white rounded-4 shadow p-4 px-md-5'
+                            }
+                        }) }}
+                        <div class="mb-3">
+                            {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'required': 'required', 'autocomplete': 'name'}}) }}
+                            {{ form_errors(form.nom) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.email, 'E-mail', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.email, {'attr': {'class': 'form-control', 'type': 'email', 'required': 'required', 'autocomplete': 'email'}}) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.message, 'Votre message', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.message, {'attr': {'class': 'form-control', 'rows': '3', 'required': 'required'}}) }}
+                            {{ form_errors(form.message) }}
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-figma-dark rounded-pill py-2 fw-bold">
+                                Envoyer <i class="bi bi-send ms-1"></i>
+                            </button>
+                        </div>
+                        <div class="mt-3 small text-center text-secondary">
+                            Ou
+                            <a href="https://wa.me/1234567890" target="_blank" class="text-success text-decoration-underline">
+                                <i class="bi bi-whatsapp"></i> WhatsApp
+                            </a>
+                        </div>
+                        {{ form_end(form) }}
+                        <div class="mt-4 text-center text-figma-dark fw-medium">
+                            <i class="bi bi-geo-alt-fill"></i> 123 rue Fitness, 75000 Paris &nbsp;•&nbsp;
+                            <i class="bi bi-telephone"></i> 01 23 45 67 89
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Carte Google Maps -->
+        <section class="section-space py-0 pb-5 bg-white">
+            <div class="container">
+                <h3 class="fw-bold text-figma-dark mb-3 text-center animate-on-scroll" data-animate="fadeInDown">
+                    <i class="bi bi-geo-alt"></i> Nous retrouver
+                </h3>
+                <div class="shadow rounded-4 overflow-hidden animate-on-scroll" data-animate="zoomIn">
+                    <iframe
+                        src="https://www.google.com/maps?q=123+rue+Fitness,+75000+Paris&output=embed"
+                        width="100%"
+                        height="320"
+                        frameborder="0"
+                        style="border:0; min-width:220px;"
+                        allowfullscreen
+                        aria-hidden="false"
+                        tabindex="0"
+                        title="Carte Souplesse Fitness"
+                    ></iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-top py-4 bg-light mt-5">
+        <div class="container text-center text-figma-dark small">
+            <div class="mb-3">
+                <a href="#contact" class="btn btn-figma-yellow btn-sm rounded-pill shadow-sm fw-bold px-4" style="letter-spacing:0.5px;">
+                    <i class="bi bi-arrow-right-circle me-1"></i> Demander une séance d'essai offerte
+                </a>
+            </div>
+            &copy; {{ "now"|date("Y") }} Souplesse Fitness. Tous droits réservés.
+        </div>
+    </footer>
 {% endblock %}

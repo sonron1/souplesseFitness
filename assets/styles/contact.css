@@ -1,0 +1,47 @@
+.contact-banner {
+   background: url("/public/images/banner.jpg") center/cover no-repeat;
+    min-height: 200px;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 2rem;
+    margin-bottom: -60px;
+}
+.contact-banner h1 {
+    color: #fff;
+    text-shadow: 0 5px 16px rgba(0,0,0,0.45);
+    margin: 0;
+    font-weight: 700;
+}
+.contact-card {
+    margin-top: 60px;
+    border-radius: 20px;
+    box-shadow: 0 2px 20px rgba(50, 50, 93, 0.08);
+    background-color: #fff;
+    padding: 3rem 2rem 2rem 2rem;
+}
+.contact-btn {
+    background: linear-gradient(90deg, #72e0ae, #0bbf70 60%);
+    border: none;
+    transition: box-shadow 0.3s;
+    box-shadow: 0 2px 10px #0bbf7066;
+}
+.contact-btn:hover {
+    box-shadow: 0 6px 20px #0bbf7099;
+    background: linear-gradient(90deg, #0bbf70 20%, #72e0ae 100%);
+}
+.form-control:focus {
+    border-color: #0bbf70;
+    box-shadow: 0 0 8px #72e0ae33;
+}
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInSlide 1s forwards;
+}
+@keyframes fadeInSlide {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,212 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{{ user.fullName }}{% endblock %}
+{% block page_title %}Profil utilisateur{% endblock %}
+{% block page_subtitle %}{{ user.fullName }} - {{ user.mainRole }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Informations principales -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-person-lines-fill me-2"></i>Informations personnelles</h5>
+                    <div>
+                        <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-sm btn-warning">
+                            <i class="bi bi-pencil"></i> Modifier
+                        </a>
+                        <a href="{{ path('admin_users_list') }}" class="btn btn-sm btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Retour
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-4">Nom complet :</dt>
+                                <dd class="col-8">{{ user.fullName }}</dd>
+
+                                <dt class="col-4">Email :</dt>
+                                <dd class="col-8">{{ user.email }}</dd>
+
+                                <dt class="col-4">Téléphone :</dt>
+                                <dd class="col-8">{{ user.phone ?? 'Non renseigné' }}</dd>
+
+                                <dt class="col-4">Date de naissance :</dt>
+                                <dd class="col-8">{{ user.birthDate ? user.birthDate|date('d/m/Y') : 'Non renseignée' }}</dd>
+
+                                <dt class="col-4">Genre :</dt>
+                                <dd class="col-8">{{ user.gender ?? 'Non renseigné' }}</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-4">Adresse :</dt>
+                                <dd class="col-8">{{ user.address ?? 'Non renseignée' }}</dd>
+
+                                <dt class="col-4">Ville :</dt>
+                                <dd class="col-8">{{ user.city ?? 'Non renseignée' }}</dd>
+
+                                <dt class="col-4">Contact d'urgence :</dt>
+                                <dd class="col-8">{{ user.emergencyContact ?? 'Non renseigné' }}</dd>
+
+                                <dt class="col-4">Tél. urgence :</dt>
+                                <dd class="col-8">{{ user.emergencyPhone ?? 'Non renseigné' }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations fitness -->
+            {% if user.isClient or user.isCoach %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-heart-pulse me-2"></i>Informations fitness</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-4">Objectifs :</dt>
+                                    <dd class="col-8">{{ user.fitnessGoals ?? 'Non renseigné' }}</dd>
+
+                                    <dt class="col-4">Niveau :</dt>
+                                    <dd class="col-8">
+                                        {% if user.experienceLevel %}
+                                            <span class="badge bg-{{ user.experienceLevel == 'Débutant' ? 'success' : (user.experienceLevel == 'Intermédiaire' ? 'warning' : 'danger') }}">
+                                        {{ user.experienceLevel }}
+                                    </span>
+                                        {% else %}
+                                            Non renseigné
+                                        {% endif %}
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-4">Newsletter :</dt>
+                                    <dd class="col-8">
+                                <span class="badge bg-{{ user.subscribeNewsletter ? 'success' : 'secondary' }}">
+                                    {{ user.subscribeNewsletter ? 'Abonné' : 'Non abonné' }}
+                                </span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+
+                        {% if user.medicalConditions %}
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <strong>Conditions médicales :</strong>
+                                    <p class="text-muted mt-2">{{ user.medicalConditions }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <!-- Statut et rôle -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-shield-check me-2"></i>Statut</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-person-circle display-1 text-muted"></i>
+                    </div>
+
+                    <h4>{{ user.fullName }}</h4>
+                    <span class="badge {{ user.roleBadgeClass }} fs-6 mb-3">{{ user.mainRole }}</span>
+
+                    <div class="d-grid gap-2">
+                        <div class="d-flex justify-content-between">
+                            <span>Statut :</span>
+                            <span class="badge bg-{{ user.isActive ? 'success' : 'secondary' }}">
+                            {{ user.isActive ? 'Actif' : 'Inactif' }}
+                        </span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Vérifié :</span>
+                            <span class="badge bg-{{ user.isVerified ? 'success' : 'warning' }}">
+                            {{ user.isVerified ? 'Oui' : 'Non' }}
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations système -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Informations système</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-5">ID :</dt>
+                        <dd class="col-7">#{{ user.id }}</dd>
+
+                        <dt class="col-5">Inscription :</dt>
+                        <dd class="col-7">{{ user.createdAt|date('d/m/Y à H:i') }}</dd>
+
+                        <dt class="col-5">Dernière connexion :</dt>
+                        <dd class="col-7">{{ user.lastLogin ? user.lastLogin|date('d/m/Y à H:i') : 'Jamais' }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Modifier
+                        </a>
+
+                        <form method="POST" action="{{ path('admin_user_toggle_status', {id: user.id}) }}" style="display: inline;">
+                            <button type="submit" class="btn btn-{{ user.isActive ? 'secondary' : 'success' }} w-100">
+                                <i class="bi bi-{{ user.isActive ? 'pause' : 'play' }}"></i>
+                                {{ user.isActive ? 'Désactiver' : 'Activer' }}
+                            </button>
+                        </form>
+
+                        {% if not user.isAdmin or (user.isAdmin and stats.total_admins > 1) %}
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="bi bi-trash"></i> Supprimer
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de suppression -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{{ user.fullName }}</strong> ?</p>
+                    <p class="text-danger"><i class="bi bi-exclamation-triangle"></i> Cette action est irréversible.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form method="POST" action="{{ path('admin_user_delete', {id: user.id}) }}" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

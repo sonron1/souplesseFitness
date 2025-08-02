@@ -1,0 +1,174 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil - {{ user.firstName ?? user.email|split('@')[0] }}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Header -->
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="h3 mb-0 text-figma-dark">
+                            <i class="bi bi-person-gear me-2"></i>Mon Profil
+                        </h1>
+                        <p class="text-muted mb-0">Gérez vos informations personnelles</p>
+                    </div>
+                    <div>
+                        <a href="{{ path('client_dashboard') }}" class="btn btn-figma-outline-dark rounded-pill px-4">
+                            <i class="bi bi-arrow-left me-1"></i>Retour au dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Informations personnelles -->
+            <div class="col-lg-8">
+                <div class="bg-white rounded-4 shadow-sm p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">
+                            <i class="bi bi-person-fill text-figma-orange me-2"></i>
+                            Informations personnelles
+                        </h5>
+                        <button class="btn btn-figma-yellow btn-sm rounded-pill">
+                            <i class="bi bi-pencil me-1"></i>Modifier
+                        </button>
+                    </div>
+
+                    {% if user %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-3">
+                                    <label class="small text-muted fw-bold">EMAIL</label>
+                                    <p class="mb-0 fw-medium">{{ user.email }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-3">
+                                    <label class="small text-muted fw-bold">NOM COMPLET</label>
+                                    <p class="mb-0 fw-medium">
+                                        {% if user.firstName and user.lastName %}
+                                            {{ user.firstName }} {{ user.lastName }}
+                                        {% else %}
+                                            Non renseigné
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-3">
+                                    <label class="small text-muted fw-bold">TÉLÉPHONE</label>
+                                    <p class="mb-0 fw-medium">{{ user.phone ?? 'Non renseigné' }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-3">
+                                    <label class="small text-muted fw-bold">VILLE</label>
+                                    <p class="mb-0 fw-medium">{{ user.city ?? 'Non renseigné' }}</p>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="p-3 bg-light rounded-3">
+                                    <label class="small text-muted fw-bold">ADRESSE</label>
+                                    <p class="mb-0 fw-medium">{{ user.address ?? 'Non renseignée' }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-3">
+                                    <label class="small text-muted fw-bold">DATE DE NAISSANCE</label>
+                                    <p class="mb-0 fw-medium">
+                                        {% if user.birthDate %}
+                                            {{ user.birthDate|date('d/m/Y') }}
+                                        {% else %}
+                                            Non renseignée
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded-3">
+                                    <label class="small text-muted fw-bold">SEXE</label>
+                                    <p class="mb-0 fw-medium">
+                                        {% if user.gender %}
+                                            {% if user.gender == 'M' %}Masculin{% elseif user.gender == 'F' %}Féminin{% else %}{{ user.gender }}{% endif %}
+                                        {% else %}
+                                            Non renseigné
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="p-3 bg-light rounded-3">
+                                    <label class="small text-muted fw-bold">MEMBRE DEPUIS</label>
+                                    <p class="mb-0 fw-medium">
+                                        {% if user.createdAt %}
+                                            {{ user.createdAt|date('d/m/Y à H:i') }}
+                                        {% else %}
+                                            Non renseigné
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-person-x fs-1 text-muted mb-3"></i>
+                            <p class="text-muted">Aucune information disponible</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Sidebar - Actions rapides -->
+            <div class="col-lg-4">
+                <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-lightning-charge-fill text-figma-yellow me-2"></i>
+                        Actions rapides
+                    </h6>
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('client_reservations') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-calendar-plus me-2"></i>Mes réservations
+                        </a>
+                        <a href="{{ path('client_abonnements') }}" class="btn btn-outline-success">
+                            <i class="bi bi-card-checklist me-2"></i>Mes abonnements
+                        </a>
+                        <a href="{{ path('app_home') }}#contact" class="btn btn-outline-info">
+                            <i class="bi bi-headset me-2"></i>Contacter le support
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Statistiques du compte -->
+                <div class="bg-white rounded-4 shadow-sm p-4">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-graph-up text-success me-2"></i>
+                        Mon activité
+                    </h6>
+                    <div class="small">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Statut :</span>
+                            <span class="badge bg-success">
+                            {% if user.isActive %}Actif{% else %}Inactif{% endif %}
+                        </span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Rôle :</span>
+                            <span class="badge
+                            {% if user.roles %}bg-success{% else %}bg-warning{% endif %}">
+                            <span class="badge bg-figma-orange text-white">Client</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Email vérifié :</span>
+                            <span class="badge {% if user.isVerified %}bg-success{% else %}bg-warning{% endif %}">
+                            {% if user.isVerified %}Oui{% else %}Non{% endif %}
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
